@@ -1,4 +1,6 @@
-#saini bots
+# saini bots - fixed requirements
+setuptools>=65.0.0
+wheel
 async-lru==2.0.2
 certifi==2023.5.7
 charset-normalizer==3.1.0
@@ -17,22 +19,19 @@ soupsieve==2.4.1
 TgCrypto==1.2.5
 urllib3==2.0.3
 websockets==11.0.3
-yt-dlp==2025.02.19
+yt-dlp
 motor
 pytz
 aiohttp
 aiofiles
-pytz
-pillow
 m3u8
 umongo==3.1.0
 speedtest-cli
-Flask==1.1.2
-gunicorn==20.1.0
-Jinja2==3.0.3
-werkzeug==2.0.2
-itsdangerous==2.0.1
-ffmpeg
+Flask==2.3.3
+gunicorn==21.2.0
+Jinja2==3.1.2
+Werkzeug==2.3.7
+itsdangerous==2.1.2
 youtube-dl
 cloudscraper
 cryptography
@@ -49,3 +48,4 @@ google-auth-oauthlib
 google-auth-httplib2
 google-api-python-client
 ffmpeg-python
+pillow

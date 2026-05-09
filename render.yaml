@@ -18,7 +18,5 @@ services:
         sync: false
       - key: CREDIT
         sync: false
-      #- key: WEBHOOK
-        #sync: false
       - key: PORT
-        value: 8000  # Default port value, update if needed
+        value: 8000

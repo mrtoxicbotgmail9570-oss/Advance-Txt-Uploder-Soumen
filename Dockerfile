@@ -1,38 +1,46 @@
-# Use a Python 3.12.3 Alpine base image
-FROM python:3.12-alpine3.20
+# Use Python 3.12 Debian-based image (NOT Alpine - Alpine lacks pkg_resources/setuptools by default)
+FROM python:3.12-slim
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy all files from the current directory to the container's /app directory
-COPY . .
+# Install system dependencies
+RUN apt-get update -y && apt-get upgrade -y \
+    && apt-get install -y --no-install-recommends \
+        gcc \
+        libffi-dev \
+        musl-dev \
+        ffmpeg \
+        aria2 \
+        make \
+        g++ \
+        cmake \
+        wget \
+        unzip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install necessary dependencies
-RUN apk add --no-cache \
-    gcc \
-    libffi-dev \
-    musl-dev \
-    ffmpeg \
-    aria2 \
-    make \
-    g++ \
-    cmake && \
-    wget -q https://github.com/axiomatic-systems/Bento4/archive/v1.6.0-639.zip && \
+# Build and install mp4decrypt from Bento4
+RUN wget -q https://github.com/axiomatic-systems/Bento4/archive/v1.6.0-639.zip && \
     unzip v1.6.0-639.zip && \
     cd Bento4-1.6.0-639 && \
     mkdir build && \
     cd build && \
     cmake .. && \
     make -j$(nproc) && \
-    cp mp4decrypt /usr/local/bin/ &&\
+    cp mp4decrypt /usr/local/bin/ && \
     cd ../.. && \
     rm -rf Bento4-1.6.0-639 v1.6.0-639.zip
 
-# Install Python dependencies
-RUN pip3 install --no-cache-dir --upgrade pip \
-    && pip3 install --no-cache-dir --upgrade -r sainibots.txt \
-    && python3 -m pip install -U yt-dlp
+# Copy all files
+COPY . .
 
-# Set the command to run the application
-CMD ["sh", "-c", "gunicorn app:app & python3 modules/main.py"]
+# Install Python dependencies (setuptools first to ensure pkg_resources is available)
+RUN pip install --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r sainibots.txt \
+    && pip install -U yt-dlp
 
+ENV COOKIES_FILE_PATH="/app/modules/youtube_cookies.txt"
+
+# Run gunicorn (web server for Render port detection) + bot in parallel
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-8000} app:app & python3 modules/main.py"]
