@@ -23,7 +23,7 @@ def register_settings_handlers(bot):
         ])
         await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://envs.sh/GVI.jpg",
+          media="https://graph.org/file/45f48779e0aa39709d1e8-4c024567d60f6ec5c2.jpg",
           caption=caption
         ),
         reply_markup=keyboard
@@ -40,7 +40,7 @@ def register_settings_handlers(bot):
         ])
         await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://tinypic.host/images/2025/07/14/file_00000000fc2461fbbdd6bc500cecbff8_conversation_id6874702c-9760-800e-b0bf-8e0bcf8a3833message_id964012ce-7ef5-4ad4-88e0-1c41ed240c03-1-1.jpg",
+          media="https://graph.org/file/b23084c3e9124e14e18ec-d385f8f9c8b1635a2e.jpg",
           caption=caption
         ),
         reply_markup=keyboard
@@ -57,7 +57,7 @@ def register_settings_handlers(bot):
         ])
         await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://tinypic.host/images/2025/07/14/file_00000000fc2461fbbdd6bc500cecbff8_conversation_id6874702c-9760-800e-b0bf-8e0bcf8a3833message_id964012ce-7ef5-4ad4-88e0-1c41ed240c03-1-1.jpg",
+          media="https://graph.org/file/033121ad32291bcaddd01-d91ae4a1f7ca9378fc.jpg",
           caption=caption
         ),
         reply_markup=keyboard
@@ -75,7 +75,7 @@ def register_settings_handlers(bot):
         ])
         await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://tinypic.host/images/2025/07/14/file_00000000fc2461fbbdd6bc500cecbff8_conversation_id6874702c-9760-800e-b0bf-8e0bcf8a3833message_id964012ce-7ef5-4ad4-88e0-1c41ed240c03-1-1.jpg",
+          media="https://graph.org/file/417cc7326cab9036c0152-f6a281db2a6975dfa9.jpg",
           caption=caption
         ),
         reply_markup=keyboard
@@ -163,7 +163,7 @@ def register_settings_handlers(bot):
       caption = ("<b>⋅ This Feature is Not Working Yet ⋅</b>")
       await callback_query.message.edit_media(
         InputMediaPhoto(
-            media="https://envs.sh/GVI.jpg",
+            media="https://graph.org/file/4f489f48098e89b7240b2-0c35f0c5a758db2cb1.jpg",
             caption=caption
         ),
         reply_markup=keyboard
