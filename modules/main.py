@@ -182,7 +182,6 @@ register_upgrade_handlers(bot)
 register_commands_handlers(bot)
 register_broadcast_handlers(bot)
 register_youtube_handlers(bot)
-register_broadcastBro_handlers(bot)
 register_authorisation_handlers(bot)
 register_drm_handlers(bot)
 #==================================================================
