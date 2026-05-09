@@ -28,7 +28,7 @@ def register_feature_handlers(bot):
         ])
         await callback_query.message.edit_media(
             InputMediaPhoto(
-                media="https://tinypic.host/images/2025/07/14/file_000000002d44622f856a002a219cf27aconversation_id68747543-56d8-800e-ae47-bb6438a09851message_id8e8cbfb5-ea6c-4f59-974a-43bdf87130c0.png",
+                media="https://graph.org/file/d94225198c49f4837ad6d-956835edec68f686bb.jpg",
                 caption=caption
             ),
             reply_markup=keyboard
@@ -41,7 +41,7 @@ def register_feature_handlers(bot):
         caption = f"**Auto Pin 📌 Batch Name :**\n\nAutomatically Pins the Batch Name in Channel or Group, If Starting from the First Link."
         await callback_query.message.edit_media(
             InputMediaPhoto(
-                media="https://tinypic.host/images/2025/07/14/file_000000002d44622f856a002a219cf27aconversation_id68747543-56d8-800e-ae47-bb6438a09851message_id8e8cbfb5-ea6c-4f59-974a-43bdf87130c0.png",
+                media="https://graph.org/file/4f489f48098e89b7240b2-0c35f0c5a758db2cb1.jpg",
                 caption=caption
             ),
             reply_markup=keyboard
@@ -55,7 +55,7 @@ def register_feature_handlers(bot):
       caption = f"**Custom Watermark :**\n\nSet Your Own Custom Watermark on Videos for Added Personalization."
       await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://tinypic.host/images/2025/07/14/file_000000002d44622f856a002a219cf27aconversation_id68747543-56d8-800e-ae47-bb6438a09851message_id8e8cbfb5-ea6c-4f59-974a-43bdf87130c0.png",
+          media="https://graph.org/file/45f48779e0aa39709d1e8-4c024567d60f6ec5c2.jpg",
           caption=caption
           ),
           reply_markup=keyboard
@@ -67,7 +67,7 @@ def register_feature_handlers(bot):
       caption = f"**🔄 Reset Command:**\n\nIf You Want to Reset or Restart Your Bot, Simply Use Command /reset."
       await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://tinypic.host/images/2025/07/14/file_000000002d44622f856a002a219cf27aconversation_id68747543-56d8-800e-ae47-bb6438a09851message_id8e8cbfb5-ea6c-4f59-974a-43bdf87130c0.png",
+          media="https://graph.org/file/033121ad32291bcaddd01-d91ae4a1f7ca9378fc.jpg",
           caption=caption
           ),
           reply_markup=keyboard
@@ -79,7 +79,7 @@ def register_feature_handlers(bot):
       caption = f"**🖨️ Bot Working Logs:**\n\n◆/logs - Bot Send Working Logs in .txt File."
       await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://tinypic.host/images/2025/07/14/file_000000002d44622f856a002a219cf27aconversation_id68747543-56d8-800e-ae47-bb6438a09851message_id8e8cbfb5-ea6c-4f59-974a-43bdf87130c0.png",
+          media="https://graph.org/file/29c4511ee7a4653d22fe1-67906a2a8392895644.jpg",
           caption=caption
           ),
           reply_markup=keyboard
@@ -91,7 +91,7 @@ def register_feature_handlers(bot):
       caption = f"**🖋️ Custom File Name:**\n\nSupport for Custom Name before the File Extension.\nAdd name ..when txt is uploading"
       await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://tinypic.host/images/2025/07/14/file_000000002d44622f856a002a219cf27aconversation_id68747543-56d8-800e-ae47-bb6438a09851message_id8e8cbfb5-ea6c-4f59-974a-43bdf87130c0.png",
+          media="https://graph.org/file/b45300f1cd068ad8f1895-fa23a3a1ad25789597.jpg",
           caption=caption
           ),
           reply_markup=keyboard
@@ -103,7 +103,7 @@ def register_feature_handlers(bot):
       caption = f"**Custom Title Feature :**\nAdd and customize titles at the starting\n**NOTE 📍 :** The Titile must enclosed within (Title), Best For appx's .txt file."
       await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://tinypic.host/images/2025/07/14/file_000000002d44622f856a002a219cf27aconversation_id68747543-56d8-800e-ae47-bb6438a09851message_id8e8cbfb5-ea6c-4f59-974a-43bdf87130c0.png",
+          media="https://graph.org/file/b67a919df868cbb82b3cb-131aaff80361c5af6e.jpg",
           caption=caption
           ),
           reply_markup=keyboard
@@ -115,7 +115,7 @@ def register_feature_handlers(bot):
       caption = f"**📢 Broadcasting Support:**\n\n◆/broadcast - 📢 Broadcast to All Users.\n◆/broadusers - 👁️ To See All Broadcasting User"
       await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://tinypic.host/images/2025/07/14/file_000000002d44622f856a002a219cf27aconversation_id68747543-56d8-800e-ae47-bb6438a09851message_id8e8cbfb5-ea6c-4f59-974a-43bdf87130c0.png",
+          media="https://graph.org/file/8c148221d261c06e2102b-7164eb21e504cbefe3.jpg",
           caption=caption
           ),
           reply_markup=keyboard
@@ -127,7 +127,7 @@ def register_feature_handlers(bot):
       caption = f"**🤖 Available Commands 🗓️**\n◆/t2t for text to .txt file\n"
       await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://tinypic.host/images/2025/07/14/file_000000002d44622f856a002a219cf27aconversation_id68747543-56d8-800e-ae47-bb6438a09851message_id8e8cbfb5-ea6c-4f59-974a-43bdf87130c0.png",
+          media="https://graph.org/file/3f0529e0a232d7a076a60-998260a13c34d2b7ea.jpg",
           caption=caption
           ),
           reply_markup=keyboard
@@ -139,7 +139,7 @@ def register_feature_handlers(bot):
       caption = f"**YouTube Commands:**\n\n◆/y2t - 🔪 YouTube Playlist → .txt Converter\n◆/ytm - 🎶 YouTube → .mp3 downloader\n\n<blockquote><b>◆YouTube → .mp3 downloader\n01. Send YouTube Playlist.txt file\n02. Send single or multiple YouTube links set\neg.\n`https://www.youtube.com/watch?v=xxxxxx\nhttps://www.youtube.com/watch?v=yyyyyy`</b></blockquote>"
       await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://envs.sh/GVi.jpg",
+          media="https://graph.org/file/28eaaf6ec37903d4c0841-93d28f7433c8e62dc2.jpg",
           caption=caption
           ),
           reply_markup=keyboard
@@ -152,7 +152,7 @@ def register_feature_handlers(bot):
       caption = f"**HTML Commands:**\n\n◆/t2h - 🌐 .txt → .html Converter"
       await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://envs.sh/GVI.jpg",
+          media="https://graph.org/file/d94225198c49f4837ad6d-956835edec68f686bb.jpg",
           caption=caption
           ),
           reply_markup=keyboard
