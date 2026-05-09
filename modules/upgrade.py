@@ -34,7 +34,7 @@ def register_upgrade_handlers(bot):
     
       await callback_query.message.edit_media(
         InputMediaPhoto(
-          media="https://envs.sh/GVI.jpg",
+          media="https://graph.org/file/b67a919df868cbb82b3cb-131aaff80361c5af6e.jpg",
           caption=caption
         ),
         reply_markup=keyboard
