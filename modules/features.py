@@ -24,6 +24,7 @@ def register_feature_handlers(bot):
             [InlineKeyboardButton("🎥 YouTube", callback_data="yt_command")],
             [InlineKeyboardButton("🌐 HTML", callback_data="html_command")],
             [InlineKeyboardButton("📝 Text File", callback_data="txt_maker_command"), InlineKeyboardButton("📢 Broadcast", callback_data="broadcast_command")],
+            [InlineKeyboardButton("📄 PDF Features", callback_data="pdf_features_command")],
             [InlineKeyboardButton("🔙 Back to Main Menu", callback_data="back_to_main_menu")]
         ])
         await callback_query.message.edit_media(
@@ -159,3 +160,74 @@ def register_feature_handlers(bot):
       )
 
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
+
+    @bot.on_callback_query(filters.regex("^pdf_features_command$"))
+    async def pdf_features_button(client, callback_query):
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("📄 PDF Rename", callback_data="pdfrename_command")],
+            [InlineKeyboardButton("🖼️ PDF Thumbnail", callback_data="pdfthumb_command")],
+            [InlineKeyboardButton("🔙 Back to Feature", callback_data="feat_command")]
+        ])
+        caption = (
+            "**📄 PDF Features :**\n\n"
+            "◆ **PDF Rename** — Rename any PDF file and re-upload.\n"
+            "◆ **PDF Thumbnail** — ⚠️Temporary Unavailable."
+        )
+        await callback_query.message.edit_media(
+            InputMediaPhoto(
+                media="https://graph.org/file/b45300f1cd068ad8f1895-fa23a3a1ad25789597.jpg",
+                caption=caption
+            ),
+            reply_markup=keyboard
+        )
+
+# .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
+
+    @bot.on_callback_query(filters.regex("^pdfrename_command$"))
+    async def pdfrename_feat_button(client, callback_query):
+      keyboard = InlineKeyboardMarkup([
+          [InlineKeyboardButton("💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton("💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
+          [InlineKeyboardButton("🔙 Back to PDF Features", callback_data="pdf_features_command")]
+      ])
+      caption = (
+          f"**📄 PDF Rename Feature:**\n\n"
+          f"◆/pdfrename - Rename any PDF file.\n\n"
+          f"<blockquote><b>How to use:</b>\n"
+          f"1. Send /pdfrename command\n"
+          f"2. Bot will ask you to send your PDF file\n"
+          f"3. Then send the new name (without .pdf)\n"
+          f"4. Bot renames and re-uploads with new name\n"
+          f"✅ PDF Thumbnail (if set) is applied automatically.</blockquote>\n\n"
+          f"Use Powerful Rename Bot **@Cinderella_renameBot**\n"
+          f"If you want to Generate your String Session so use **@Cinderella_StringBot**"
+      )
+      await callback_query.message.edit_media(
+        InputMediaPhoto(
+          media="https://graph.org/file/b45300f1cd068ad8f1895-fa23a3a1ad25789597.jpg",
+          caption=caption
+          ),
+          reply_markup=keyboard
+      )
+
+# .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
+
+    @bot.on_callback_query(filters.regex("^pdfthumb_command$"))
+    async def pdfthumb_feat_button(client, callback_query):
+      keyboard = InlineKeyboardMarkup([
+          [InlineKeyboardButton("💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton("💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
+          [InlineKeyboardButton("🔙 Back to PDF Features", callback_data="pdf_features_command")]
+      ])
+      caption = (
+          "**🖼️ PDF Thumbnail Feature**\n\n"
+          "⚠️ **Temporary Unavailable**\n"
+          "This feature is not available in this Bot.\n\n"
+          "Use Powerful Rename Bot **@Cinderella_renameBot**\n"
+          "If you want to Generate your String Session so use **@Cinderella_StringBot**"
+      )
+      await callback_query.message.edit_media(
+        InputMediaPhoto(
+          media="https://graph.org/file/b45300f1cd068ad8f1895-fa23a3a1ad25789597.jpg",
+          caption=caption
+          ),
+          reply_markup=keyboard
+      )

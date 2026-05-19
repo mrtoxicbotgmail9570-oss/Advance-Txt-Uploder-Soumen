@@ -226,7 +226,11 @@ async def download_video(url,cmd, name):
     global failed_counter
     print(download_cmd)
     logging.info(download_cmd)
-    k = subprocess.run(download_cmd, shell=True)
+    try:
+        k = subprocess.run(download_cmd, shell=True, timeout=3600)  # 1 hour max
+    except subprocess.TimeoutExpired:
+        print(f"Download timed out for: {name}")
+        return name
     if "visionias" in cmd and k.returncode != 0 and failed_counter <= 10:
         failed_counter += 1
         await asyncio.sleep(5)
@@ -250,16 +254,209 @@ async def download_video(url,cmd, name):
         return os.path.isfile.splitext[0] + "." + "mp4"
 
 
-async def send_doc(bot: Client, m: Message, cc, ka, cc1, prog, count, name, channel_id):
+async def apply_pdf_watermark(input_pdf, output_pdf, watermark_text):
+    """Apply a diagonal text watermark to every page of a PDF — top-right, 45°, 30% opacity."""
+    try:
+        import io
+        from reportlab.pdfgen import canvas
+        from reportlab.lib.colors import Color
+
+        # Try pypdf first (newer), fall back to PyPDF2
+        try:
+            from pypdf import PdfReader, PdfWriter
+        except ImportError:
+            from PyPDF2 import PdfReader, PdfWriter
+
+        reader = PdfReader(input_pdf)
+        writer = PdfWriter()
+
+        for page in reader.pages:
+            page_width = float(page.mediabox.width)
+            page_height = float(page.mediabox.height)
+
+            # Build watermark layer
+            packet = io.BytesIO()
+            c = canvas.Canvas(packet, pagesize=(page_width, page_height))
+            c.saveState()
+
+            font_size = max(10, int(page_width / 22))
+            # 30% opacity black text (visible on white background PDFs)
+            c.setFillColor(Color(0, 0, 0, alpha=0.3))
+            c.setFont("Helvetica-Bold", font_size)
+
+            # Top-right area, 45 degree rotation
+            c.translate(page_width * 0.80, page_height * 0.85)
+            c.rotate(45)
+            c.drawCentredString(0, 0, watermark_text)
+            c.restoreState()
+            c.save()
+
+            packet.seek(0)
+
+            try:
+                from pypdf import PdfReader as PR2
+            except ImportError:
+                from PyPDF2 import PdfReader as PR2
+
+            wm_reader = PR2(packet)
+            wm_page = wm_reader.pages[0]
+            page.merge_page(wm_page)
+            writer.add_page(page)
+
+        with open(output_pdf, "wb") as f_out:
+            writer.write(f_out)
+        return True
+    except Exception as e:
+        print(f"PDF watermark error: {e}")
+        return False
+
+
+# ── PDF Thumbnail downloader — graph.org .jpg URL support + Telegram file_id support ──
+async def download_pdf_thumbnail(pdfthumb_url: str, bot=None) -> str | None:
+    """
+    Download thumbnail from URL (especially graph.org .jpg links) OR
+    download from Telegram using file_id (when bot is provided).
+    Returns local file path on success, None on failure.
+    URL: 5 retries, 45 second timeout total.
+    Telegram file_id: direct download via bot.download_media().
+    """
+    import uuid
+    if not pdfthumb_url or pdfthumb_url == "/d":
+        return None
+
+    # ── Case 1: Telegram file_id (not a URL, not a local path) ─────────────
+    if not (pdfthumb_url.startswith("http://") or pdfthumb_url.startswith("https://")):
+        if os.path.exists(pdfthumb_url):
+            return pdfthumb_url
+        if bot is not None:
+            local_thumb = f"pdfthumb_tg_{uuid.uuid4().hex}.jpg"
+            try:
+                downloaded = await bot.download_media(pdfthumb_url, file_name=local_thumb)
+                if downloaded and os.path.exists(downloaded):
+                    print(f"PDF thumb downloaded from Telegram file_id: {downloaded}")
+                    return downloaded
+                else:
+                    print(f"PDF thumb Telegram download returned: {downloaded}")
+            except Exception as e:
+                print(f"PDF thumb Telegram file_id download error: {e}")
+            return None
+        else:
+            print(f"PDF thumb is Telegram file_id but no bot provided, skipping thumbnail.")
+            return None
+
+    # ── Case 2: HTTP/HTTPS URL (graph.org .jpg etc) ──────────────────────────
+    local_thumb = f"pdfthumb_{uuid.uuid4().hex}.jpg"
+    max_retries = 5
+    timeout_per_attempt = 9  # 5 retries x 9s = 45s total
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            dl = requests.get(
+                pdfthumb_url,
+                timeout=timeout_per_attempt,
+                headers={"User-Agent": "Mozilla/5.0"},
+                stream=True
+            )
+            if dl.status_code == 200:
+                content = dl.content
+                if len(content) > 0:
+                    with open(local_thumb, "wb") as tf:
+                        tf.write(content)
+                    # Validate and convert to proper JPEG for Telegram
+                    try:
+                        from PIL import Image
+                        img = Image.open(local_thumb)
+                        img = img.convert("RGB")
+                        img.save(local_thumb, "JPEG", quality=90)
+                        img.close()
+                    except Exception as pil_err:
+                        print(f"PDF thumb PIL convert warning: {pil_err}")
+                    print(f"PDF thumb downloaded OK (attempt {attempt}): {local_thumb}")
+                    return local_thumb
+                else:
+                    print(f"PDF thumb empty response (attempt {attempt})")
+            else:
+                print(f"PDF thumb HTTP {dl.status_code} (attempt {attempt})")
+        except Exception as e:
+            print(f"PDF thumb download error attempt {attempt}: {e}")
+        if attempt < max_retries:
+            await asyncio.sleep(1)
+
+    print(f"PDF thumb failed after {max_retries} attempts, skipping.")
+    if os.path.exists(local_thumb):
+        os.remove(local_thumb)
+    return None
+
+
+async def send_doc(bot: Client, m: Message, cc, ka, cc1, prog, count, name, channel_id, pdfwatermark="/d", pdfthumb="/d"):
+    import uuid
     reply = await bot.send_message(channel_id, f"Downloading pdf:\n<pre><code>{name}</code></pre>")
     time.sleep(1)
-    start_time = time.time()
-    await bot.send_document(ka, caption=cc1)
-    count+=1
-    await reply.delete (True)
+
+    final_pdf = ka
+    watermarked = False
+    local_thumb = None
+
+    # Apply PDF watermark if set
+    if pdfwatermark and pdfwatermark != "/d":
+        wm_output = f"{os.path.splitext(ka)[0]}_wm.pdf"  # Keep original name, add _wm suffix only for temp processing
+        try:
+            success = await asyncio.wait_for(
+                apply_pdf_watermark(ka, wm_output, pdfwatermark),
+                timeout=120
+            )
+        except asyncio.TimeoutError:
+            success = False
+            print("PDF watermark timed out")
+        if success and os.path.exists(wm_output):
+            final_pdf = wm_output
+            watermarked = True
+
+    # ── PDF Thumbnail — 5 retries, 45s total, graph.org .jpg + Telegram file_id support ──
+    thumbnail = None
+    if pdfthumb and pdfthumb != "/d":
+        try:
+            local_thumb = await asyncio.wait_for(
+                download_pdf_thumbnail(pdfthumb, bot=bot),
+                timeout=45
+            )
+        except asyncio.TimeoutError:
+            print("PDF thumbnail download timed out (45s)")
+            local_thumb = None
+        except Exception as e:
+            print(f"PDF thumbnail download error: {e}")
+            local_thumb = None
+        if local_thumb and os.path.exists(local_thumb):
+            thumbnail = local_thumb
+        else:
+            thumbnail = None
+
+    reply_up = await bot.send_message(channel_id, f"**📩 Uploading PDF 📩:-**\n<blockquote>**{name}**</blockquote>")
+    try:
+        if thumbnail:
+            await bot.send_document(channel_id, final_pdf, caption=cc1, thumb=thumbnail)
+        else:
+            await bot.send_document(channel_id, final_pdf, caption=cc1)
+    except Exception as e:
+        print(f"send_document with thumb error: {e}")
+        try:
+            await bot.send_document(channel_id, final_pdf, caption=cc1)
+        except Exception as e2:
+            print(f"send_document fallback error: {e2}")
+
+    count += 1
+    await reply.delete(True)
+    await reply_up.delete(True)
     time.sleep(1)
-    os.remove(ka)
-    time.sleep(3) 
+    if watermarked and os.path.exists(final_pdf):
+        os.remove(final_pdf)
+    if ka != final_pdf and os.path.exists(ka):
+        os.remove(ka)
+    elif os.path.exists(ka):
+        os.remove(ka)
+    if local_thumb and os.path.exists(local_thumb):
+        os.remove(local_thumb)
+    time.sleep(3)
 
 
 def decrypt_file(file_path, key):  
@@ -286,37 +483,87 @@ async def download_and_decrypt_video(url, cmd, name, key):
             return None  
 
 async def send_vid(bot: Client, m: Message, cc, filename, vidwatermark, thumb, name, prog, channel_id):
-    subprocess.run(f'ffmpeg -i "{filename}" -ss 00:00:10 -vframes 1 "{filename}.jpg"', shell=True)
-    await prog.delete (True)
+    import uuid
+
+    await prog.delete(True)
     reply1 = await bot.send_message(channel_id, f"**📩 Uploading Video 📩:-**\n<blockquote>**{name}**</blockquote>")
     reply = await m.reply_text(f"**Generate Thumbnail:**\n<blockquote>**{name}**</blockquote>")
-    try:
-        if thumb == "/d":
-            thumbnail = f"{filename}.jpg"
-        else:
-            thumbnail = thumb  
-        
-        if vidwatermark == "/d":
-            w_filename = f"{filename}"
-        else:
-            w_filename = f"w_{filename}"
-            font_path = "vidwater.ttf"
-            subprocess.run(
-                f'ffmpeg -i "{filename}" -vf "drawtext=fontfile={font_path}:text=\'{vidwatermark}\':fontcolor=white@0.3:fontsize=h/6:x=(w-text_w)/2:y=(h-text_h)/2" -codec:a copy "{w_filename}"',
-                shell=True
-            )
-            
-    except Exception as e:
-        await m.reply_text(str(e))
 
-    dur = int(duration(w_filename))
+    # ── Extract thumbnail frame at 10s from video ──────────────────────────
+    safe_thumb = f"thumb_{uuid.uuid4().hex}.jpg"
+    try:
+        proc_th = await asyncio.create_subprocess_shell(
+            f'ffmpeg -y -i "{filename}" -ss 00:00:10 -vframes 1 -update 1 "{safe_thumb}"',
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        await asyncio.wait_for(proc_th.communicate(), timeout=25)
+    except Exception:
+        pass
+
+    # ── Resolve thumbnail (thumb URL or fallback to extracted frame) ──────
+    thumbnail = None
+    local_thumb = None
+    if thumb and thumb != "/d":
+        if thumb.startswith("http://") or thumb.startswith("https://"):
+            local_thumb = f"vthumb_{uuid.uuid4().hex}.jpg"
+            try:
+                dl = requests.get(thumb, timeout=25, headers={"User-Agent": "Mozilla/5.0"}, stream=True)
+                if dl.status_code == 200 and len(dl.content) > 0:
+                    with open(local_thumb, "wb") as tf:
+                        tf.write(dl.content)
+                    thumbnail = local_thumb
+                else:
+                    thumbnail = safe_thumb if os.path.exists(safe_thumb) else None
+            except Exception:
+                if os.path.exists(local_thumb):
+                    os.remove(local_thumb)
+                local_thumb = None
+                thumbnail = safe_thumb if os.path.exists(safe_thumb) else None
+        elif thumb.lower() == "no":
+            thumbnail = safe_thumb if os.path.exists(safe_thumb) else None
+        else:
+            thumbnail = thumb if os.path.exists(thumb) else (safe_thumb if os.path.exists(safe_thumb) else None)
+    else:
+        thumbnail = safe_thumb if os.path.exists(safe_thumb) else None
+
+    dur = int(duration(filename))
     start_time = time.time()
 
+    # ── Upload as VIDEO ────────────────────────────────────────────────────
     try:
-        await bot.send_video(channel_id, w_filename, caption=cc, supports_streaming=True, height=720, width=1280, thumb=thumbnail, duration=dur, progress=progress_bar, progress_args=(reply, start_time))
-    except Exception:
-        await bot.send_document(channel_id, w_filename, caption=cc, progress=progress_bar, progress_args=(reply, start_time))
-    os.remove(w_filename)
+        await bot.send_video(
+            channel_id, filename, caption=cc,
+            supports_streaming=True, height=720, width=1280,
+            thumb=thumbnail, duration=dur,
+            progress=progress_bar, progress_args=(reply, start_time)
+        )
+    except Exception as e1:
+        print(f"send_video failed: {e1}, retrying without thumbnail")
+        try:
+            await bot.send_video(
+                channel_id, filename, caption=cc,
+                supports_streaming=True, height=720, width=1280,
+                duration=dur,
+                progress=progress_bar, progress_args=(reply, start_time)
+            )
+        except Exception as e2:
+            print(f"send_video no-thumb failed: {e2}, fallback to document")
+            try:
+                await bot.send_document(
+                    channel_id, filename, caption=cc,
+                    progress=progress_bar, progress_args=(reply, start_time)
+                )
+            except Exception as e3:
+                print(f"send_document fallback failed: {e3}")
+
+    # ── Cleanup ────────────────────────────────────────────────────────────
+    if os.path.exists(filename):
+        os.remove(filename)
     await reply.delete(True)
     await reply1.delete(True)
-    os.remove(f"{filename}.jpg")
+    if safe_thumb and os.path.exists(safe_thumb):
+        os.remove(safe_thumb)
+    if local_thumb and os.path.exists(local_thumb):
+        os.remove(local_thumb)
+

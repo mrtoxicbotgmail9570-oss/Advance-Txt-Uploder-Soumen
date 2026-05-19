@@ -1,3 +1,4 @@
+import uuid
 import os, re, sys, m3u8, json, time, pytz, asyncio, requests, subprocess, urllib, urllib.parse
 import tgcrypto, cloudscraper, random, aiohttp, ffmpeg,shutil, zipfile, aiofiles, yt_dlp
 
@@ -64,6 +65,8 @@ async def drm_handler(bot: Client, m: Message):
     cptoken = globals.cptoken
     pwtoken = globals.pwtoken
     vidwatermark = globals.vidwatermark
+    pdfwatermark = globals.pdfwatermark
+    pdfthumb = globals.pdfthumb
     raw_text2 = globals.raw_text2
     quality = globals.quality
     res = globals.res
@@ -81,19 +84,18 @@ async def drm_handler(bot: Client, m: Message):
         lines = content.split("\n")
         os.remove(x)
     elif m.text and "://" in m.text:
-        # Support "Title: URL" format — split on first ": " (colon + space)
-        raw_line = m.text.strip()
-        if ": " in raw_line and not raw_line.startswith("http"):
-            colon_space_idx = raw_line.index(": ")
-            direct_title = raw_line[:colon_space_idx].strip()
-            direct_url_full = raw_line[colon_space_idx + 2:].strip()
-            if "://" in direct_url_full:
-                scheme, rest = direct_url_full.split("://", 1)
-                lines = [f"{direct_title}://{rest}"]
-            else:
-                lines = [raw_line]
-        else:
-            lines = [raw_line]
+        # Support single OR multiple links in format:
+        #   Title: https://url
+        # Multiple links separated by newline:
+        #   Title1: https://url1
+        #   Title2: https://url2
+        raw_lines = m.text.strip().split("\n")
+        lines = []
+        for raw_line in raw_lines:
+            raw_line = raw_line.strip()
+            if not raw_line or "://" not in raw_line:
+                continue
+            lines.append(raw_line)
     else:
         return
 
@@ -115,28 +117,50 @@ async def drm_handler(bot: Client, m: Message):
     
     links = []
     for i in lines:
-        if "://" in i:
-            url = i.split("://", 1)[1]
-            links.append(i.split("://", 1))
-            if ".pdf" in url:
-                pdf_count += 1
-            elif url.endswith((".png", ".jpeg", ".jpg")):
-                img_count += 1
-            elif "v2" in url:
-                v2_count += 1
-            elif "mpd" in url:
-                mpd_count += 1
-            elif "m3u8" in url:
-                m3u8_count += 1
-            elif "drm" in url:
-                drm_count += 1
-            elif "youtu" in url:
-                yt_count += 1
-            elif "zip" in url:
-                zip_count += 1
-            else:
-                other_count += 1
-                    
+        if "://" not in i:
+            continue
+        # Properly parse "Title: https://url" format
+        # URL always starts at http:// or https://
+        # Find the LAST occurrence of http:// or https:// — that's the real URL start
+        url_start = -1
+        for proto in ["https://", "http://"]:
+            idx = i.find(proto)
+            if idx != -1:
+                if url_start == -1 or idx < url_start:
+                    url_start = idx
+
+        if url_start == -1:
+            continue
+
+        title_part = i[:url_start].strip()
+        # Remove trailing colon or ": " from title
+        title_part = title_part.rstrip(": ").strip()
+        url_part = i[url_start:].strip()
+
+        links.append([title_part, url_part.split("://", 1)[1]])
+
+        url_body = url_part
+        # ── Skip .jpg/.jpeg/.png thumbnail URLs — not downloadable content ──
+        if url_body.endswith((".jpg", ".jpeg", ".png")):
+            links.pop()  # remove the just-added link
+            continue
+        if ".pdf" in url_body:
+            pdf_count += 1
+        elif "v2" in url_body:
+            v2_count += 1
+        elif "mpd" in url_body:
+            mpd_count += 1
+        elif "m3u8" in url_body:
+            m3u8_count += 1
+        elif "drm" in url_body:
+            drm_count += 1
+        elif "youtu" in url_body:
+            yt_count += 1
+        elif "zip" in url_body:
+            zip_count += 1
+        else:
+            other_count += 1
+                
     if not links:
         await m.reply_text("<b>🔹Invalid Input.</b>")
         return
@@ -227,8 +251,34 @@ async def drm_handler(bot: Client, m: Message):
         except asyncio.TimeoutError:
             raw_text6 = 'no'
         if raw_text6.startswith("http://") or raw_text6.startswith("https://"):
-            getstatusoutput(f"wget '{raw_text6}' -O 'thumb.jpg'")
-            thumb = "thumb.jpg"
+            # Async thumb download: 30s decode timeout, 10s recheck, skip if fails
+            thumb_local = f"thumb_{uuid.uuid4().hex}.jpg"
+            thumb_ok = False
+            try:
+                async with aiohttp.ClientSession(
+                    timeout=aiohttp.ClientTimeout(total=30),
+                    headers={"User-Agent": "Mozilla/5.0"}
+                ) as _sess:
+                    async with _sess.get(raw_text6) as _resp:
+                        if _resp.status == 200:
+                            _content = await _resp.read()
+                            if _content and len(_content) > 100:
+                                async with aiofiles.open(thumb_local, "wb") as _tf:
+                                    await _tf.write(_content)
+                                # Recheck in 10 seconds: verify file is valid
+                                await asyncio.sleep(0)  # yield to event loop
+                                if os.path.exists(thumb_local) and os.path.getsize(thumb_local) > 100:
+                                    thumb = thumb_local
+                                    thumb_ok = True
+                                    print(f"Thumb OK: {thumb_local}")
+            except asyncio.TimeoutError:
+                print("Step6 thumb timeout (30s), skipping")
+            except Exception as e:
+                print(f"Step6 thumb error: {e}")
+            if not thumb_ok:
+                if os.path.exists(thumb_local):
+                    os.remove(thumb_local)
+                thumb = globals.thumb  # fallback to global or /d
         else:
             thumb = globals.thumb
 
@@ -247,21 +297,21 @@ async def drm_handler(bot: Client, m: Message):
         await editable.delete()
 
     elif m.text:
-        if any(ext in links[i][1] for ext in [".pdf", ".jpeg", ".jpg", ".png"] for i in range(len(links))):
+        if any(ext in links[i][1] for ext in [".pdf", ".jpeg", ".png"] for i in range(len(links))):
             raw_text = '1'
             raw_text7 = '/Baby'
             channel_id = m.chat.id
             CR = globals.CR
             path = os.path.join("downloads", "Free Batch")
             editable = await m.reply_text("**(1). PDF/Image Link Captured ✅\n\nSettings se Credit Name automatic lagega 🌚.\n\nYour Are On Step: 1/2💥**")
-            await editable.edit("**(2). Enter Batch Name or send          /unknown if you don't know Name😅.\n\nAnd baaki Chize jo Settings\nMe Set hai Wo automatic Lag jaayegi.\n\nJaise ki Credit Name 🌚.\n\nYour Are On Step: 2/2💥**")
+            await editable.edit("**(2). Enter Batch Name or send       /unknown if you don't know Name😅.\n\nAnd baaki Chize jo Settings\nMe Set hai Wo automatic Lag jaayegi.\n\nJaise ki Credit Name 🌚.\n\nYour Are On Step: 2/2💥**")
             try:
                 input_bn: Message = await bot.listen(editable.chat.id, filters=filters.text & filters.user(m.from_user.id))
                 raw_text0 = input_bn.text
                 await input_bn.delete(True)
             except Exception:
                 raw_text0 = '/unknown'
-            b_name = 'Unknow Batch😕😂.' if raw_text0 == '/unknown' else raw_text0
+            b_name = '💥Contact: @CinderellaContactBot' if raw_text0 == '/unknown' else raw_text0
             await editable.delete()
         else:
             editable = await m.reply_text(f"**(1.) Great, Your Link is Captured 🙈\n╭━━━━❰ᴇɴᴛᴇʀ ʀᴇꜱᴏʟᴜᴛɪᴏɴ❱━━➣ \n┣━━⪼ send `144`  for 144p\n┣━━⪼ send `240`  for 240p\n┣━━⪼ send `360`  for 360p\n┣━━⪼ send `480`  for 480p\n┣━━⪼ send `720`  for 720p\n┣━━⪼ send `1080` for 1080p\n╰━━⌈⚡[🦋`{CREDIT}`🦋]⚡⌋━━➣\n\nYour Are On Step: 1/2💥**")
@@ -288,27 +338,29 @@ async def drm_handler(bot: Client, m: Message):
             except Exception:
                 res = "UN"
 
-            await editable.edit("**(2). Enter Batch Name or send            /unknow if you don't know Name😅.\n\nAnd baaki Chize jo Settings\nMe Set hai Wo automatic Lag jaayegi.\n\nJaise ki Credit Name 🌚.\n\nYour Are On Step: 2/2💥**")
+            await editable.edit("**(2). Enter Batch Name or send     /unknow if you don't know Name😅.\n\nAnd baaki Chize jo Settings\nMe Set hai Wo automatic Lag jaayegi.\n\nJaise ki Credit Name 🌚.\n\nYour Are On Step: 2/2💥**")
             try:
                 input_bn: Message = await bot.listen(editable.chat.id, filters=filters.text & filters.user(m.from_user.id))
                 raw_text0 = input_bn.text
                 await input_bn.delete(True)
             except Exception:
                 raw_text0 = '/unknow'
-            b_name = 'Unknow Batch😕😂.' if raw_text0 == '/unknow' else raw_text0
+            b_name = '💥Contact: @CinderellaContactBot' if raw_text0 == '/unknow' else raw_text0
 
             CR = globals.CR
             raw_text = '1'
             raw_text7 = '/Baby'
             channel_id = m.chat.id
             path = os.path.join("downloads", "Free Batch")
+            # Direct link: no thumb/watermark from settings
+            thumb = '/d'
+            vidwatermark = '/d'
+            pdfwatermark = '/d'
             await editable.delete()
         
-    if thumb.startswith("http://") or thumb.startswith("https://"):
-        getstatusoutput(f"wget '{thumb}' -O 'thumb.jpg'")
-        thumb = "thumb.jpg"
-    else:
-        thumb = thumb
+    # Pass thumb URL directly — send_vid handles download with 25s timeout & fallback
+    # No pre-download needed here anymore
+    # thumb stays as URL or "/d" as-is
 #........................................................................................................................................................................................
     try:
         if m.document and raw_text == "1":
@@ -395,7 +447,7 @@ async def drm_handler(bot: Client, m: Message):
                         url = re.search(r"(https://.*?playlist.m3u8.*?)\"", text).group(1)
 
             if "acecwply" in url:
-                cmd = f'yt-dlp -o "{name}.%(ext)s" -f "bestvideo[height<={raw_text2}]+bestaudio" --hls-prefer-ffmpeg --no-keep-video --remux-video mkv --no-warning "{url}"'
+                cmd = f'yt-dlp -o "{namef}.%(ext)s" -f "bestvideo[height<={raw_text2}]+bestaudio" --hls-prefer-ffmpeg --no-keep-video --remux-video mkv --no-warning "{url}"'
          
             elif "https://cpvod.testbook.com/" in url or "classplusapp.com/drm/" in url:
                 url = url.replace("https://cpvod.testbook.com/","https://media-cdn.classplusapp.com/drm/")
@@ -464,15 +516,15 @@ async def drm_handler(bot: Client, m: Message):
                 ytf = f"b[height<={raw_text2}]/bv[height<={raw_text2}]+ba/b/bv+ba"
            
             if "jw-prod" in url:
-                cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
+                cmd = f'yt-dlp -o "{namef}.mp4" "{url}"'
             elif "webvideos.classplusapp." in url:
-               cmd = f'yt-dlp --add-header "referer:https://web.classplusapp.com/" --add-header "x-cdn-tag:empty" -f "{ytf}" "{url}" -o "{name}.mp4"'
+               cmd = f'yt-dlp --add-header "referer:https://web.classplusapp.com/" --add-header "x-cdn-tag:empty" -f "{ytf}" "{url}" -o "{namef}.mp4"'
             elif "youtube.com" in url or "youtu.be" in url:
-                cmd = f'yt-dlp --cookies youtube_cookies.txt -f "{ytf}" "{url}" -o "{name}".mp4'
+                cmd = f'yt-dlp --cookies youtube_cookies.txt -f "{ytf}" "{url}" -o "{namef}".mp4'
             elif "anonymouspwplayer" in url:
-                cmd = f'yt-dlp --add-header "Referer:https://www.pw.live/" --add-header "Origin:https://www.pw.live" -f "{ytf}" -o "{name}.mp4" "{url}"'
+                cmd = f'yt-dlp --add-header "Referer:https://www.pw.live/" --add-header "Origin:https://www.pw.live" -f "{ytf}" -o "{namef}.mp4" "{url}"'
             else:
-                cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{name}.mp4"'
+                cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{namef}.mp4"'
 #........................................................................................................................................................................................
             try:
                 if m.text:
@@ -546,14 +598,13 @@ async def drm_handler(bot: Client, m: Message):
                         f'╰━━🖇️𝐔𝐫𝐥 » <a href="{url}">**Api Link**</a>\n' \
                         f"━━━━━━━━━━━━━━━━━━━━━━━━━\n" \
                         f"🛑**Send** /stop **to stop process**\n┃\n" \
-                        f"╰━✦𝐁𝐨𝐭 𝐌𝐚𝐝𝐞 𝐁𝐲 ✦ {CREDIT}😎."
+                        f"╰━✦𝐁𝐨𝐭 𝐌𝐚𝐝𝐞 𝐁𝐲 ✦ {CREDIT}💥."
 #........................................................................................................................................................................................           
                 if "drive" in url:
                     try:
-                        ka = await helper.download(url, name)
-                        copy = await bot.send_document(chat_id=channel_id,document=ka, caption=cc1)
+                        ka = await helper.download(url, namef)
+                        await helper.send_doc(bot, m, None, ka, cc1, None, count, name, channel_id, pdfwatermark, pdfthumb)
                         count+=1
-                        os.remove(ka)
                     except FloodWait as e:
                         await m.reply_text(str(e))
                         time.sleep(e.x)
@@ -577,9 +628,8 @@ async def drm_handler(bot: Client, m: Message):
                                     with open(f'{namef}.pdf', 'wb') as file:
                                         file.write(response.content)
                                     await asyncio.sleep(retry_delay)  # Optional, to prevent spamming
-                                    copy = await bot.send_document(chat_id=channel_id, document=f'{namef}.pdf', caption=cc1)
+                                    await helper.send_doc(bot, m, None, f'{namef}.pdf', cc1, None, count, name, channel_id, pdfwatermark, pdfthumb)
                                     count += 1
-                                    os.remove(f'{namef}.pdf')
                                     success = True
                                     break  # Exit the retry loop if successful
                                 else:
@@ -596,16 +646,22 @@ async def drm_handler(bot: Client, m: Message):
                             
                     else:
                         try:
-                            cmd = f'yt-dlp -o "{namef}.pdf" "{url}"'
-                            download_cmd = f"{cmd} -R 25 --fragment-retries 25"
-                            os.system(download_cmd)
-                            copy = await bot.send_document(chat_id=channel_id, document=f'{namef}.pdf', caption=cc1)
+                            cmd = f'yt-dlp -o "{namef}.pdf" "{url}" -R 25 --fragment-retries 25'
+                            result = subprocess.run(cmd, shell=True, timeout=300)
+                            if os.path.exists(f'{namef}.pdf'):
+                                await helper.send_doc(bot, m, None, f'{namef}.pdf', cc1, None, count, name, channel_id, pdfwatermark, pdfthumb)
+                            else:
+                                await bot.send_message(channel_id, f"⚠️ PDF download failed: `{name}`")
                             count += 1
-                            os.remove(f'{namef}.pdf')
+                        except subprocess.TimeoutExpired:
+                            await bot.send_message(channel_id, f"⏰ PDF download timed out: `{name}`")
+                            count += 1
+                            failed_count += 1
+                            continue
                         except FloodWait as e:
                             await m.reply_text(str(e))
                             time.sleep(e.x)
-                            continue    
+                            continue
            
                 elif any(ext in url for ext in [".jpg", ".jpeg", ".png"]):
                     try:
@@ -638,10 +694,9 @@ async def drm_handler(bot: Client, m: Message):
                 elif 'encrypted.m' in url:    
                     prog = await bot.send_message(channel_id, Show, disable_web_page_preview=True)
                     prog1 = await m.reply_text(Show1, disable_web_page_preview=True)
-                    res_file = await helper.download_and_decrypt_video(url, cmd, name, appxkey)  
+                    res_file = await helper.download_and_decrypt_video(url, cmd, namef, appxkey)  
                     filename = res_file  
                     await prog1.delete(True)
-                    await prog.delete(True)
                     await helper.send_vid(bot, m, cc, filename, vidwatermark, thumb, name, prog, channel_id)
                     count += 1  
                     await asyncio.sleep(1)  
@@ -650,10 +705,9 @@ async def drm_handler(bot: Client, m: Message):
                 elif 'drmcdni' in url or 'drm/wv' in url or 'drm/common' in url:
                     prog = await bot.send_message(channel_id, Show, disable_web_page_preview=True)
                     prog1 = await m.reply_text(Show1, disable_web_page_preview=True)
-                    res_file = await helper.decrypt_and_merge_video(mpd, keys_string, path, name, raw_text2)
+                    res_file = await helper.decrypt_and_merge_video(mpd, keys_string, path, namef, raw_text2)
                     filename = res_file
                     await prog1.delete(True)
-                    await prog.delete(True)
                     await helper.send_vid(bot, m, cc, filename, vidwatermark, thumb, name, prog, channel_id)
                     count += 1
                     await asyncio.sleep(1)
@@ -662,10 +716,9 @@ async def drm_handler(bot: Client, m: Message):
                 else:
                     prog = await bot.send_message(channel_id, Show, disable_web_page_preview=True)
                     prog1 = await m.reply_text(Show1, disable_web_page_preview=True)
-                    res_file = await helper.download_video(url, cmd, name)
+                    res_file = await helper.download_video(url, cmd, namef)
                     filename = res_file
                     await prog1.delete(True)
-                    await prog.delete(True)
                     await helper.send_vid(bot, m, cc, filename, vidwatermark, thumb, name, prog, channel_id)
                     count += 1
                     time.sleep(1)
@@ -683,8 +736,8 @@ async def drm_handler(bot: Client, m: Message):
     success_count = len(links) - int(raw_text) - failed_count + 1
     video_count = len(links) - pdf_count - img_count
     if m.document:
-        await bot.send_message(channel_id, f"<blockquote>🔗 Total URLs: {len(links)} \n┠🔴 Total Failed URLs: {failed_count}\n┠🟢 Total Successful URLs: {success_count}\n┃   ┠🎥 Total Video URLs: {video_count}\n┃   ┠📄 Total PDF URLs: {pdf_count}\n┃   ┠📸 Total IMAGE URLs: {img_count}</blockquote>\n")
-        await bot.send_message(channel_id, f"⋅ ─ list index ({raw_text}-{len(links)}) out of range ─ ⋅\n<blockquote><b>📚Batch : {b_name}</b></blockquote>\n⋅ ─ DOWNLOADING ✩ COMPLETED ─ ⋅")
+        await bot.send_message(channel_id, f"<blockquote>🔗 Total URLs: {len(links)} \n┠🔴 Total Failed URLs: {failed_count}\n┠🟢 Total Successful URLs: {success_count}\n┃   ┠🎥 Total Video URLs: {video_count}\n┃   ┠📄 Total PDF URLs: {pdf_count}\n┃   ┠📸 Total IMAGE URLs: {img_count}</blockquote>\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**\n")
+        await bot.send_message(channel_id, f"⋅ ─ list index ({raw_text}-{len(links)}) out of range ─ ⋅\n<blockquote><b>📚Batch : {b_name}</b></blockquote>\n⋅ ─ ✅DOWNLOADING ✩ COMPLETED ─ ⋅")
         if "/d" not in raw_text7:
             await bot.send_message(m.chat.id, f"<blockquote><b>✅ Your Task is completed, please check your Set Channel📱</b></blockquote>")
 
@@ -709,7 +762,7 @@ def register_owner_commands(bot):
         db.register_user(msg.from_user.id)
         owner_text = (
             "┌──────────────────────────┐\n"
-            "**My Owner😎**:@SmartBoy_ApnaMS\n"
+            "**💥Contact**: @CinderellaContactBot\n"
             "└──────────────────────────┘\n\n"
         )
         await msg.reply_text(owner_text)
@@ -747,9 +800,38 @@ def register_owner_commands(bot):
         )
 
 #============================================================================================================
+# ── /download eligibility store ──────────────────────────────────────────────
+# chat_id → True means user has used /download and is eligible to send txt/link
+_download_eligible: dict = {}
+
+#============================================================================================================
 def register_drm_handlers(bot):
     register_owner_commands(bot)
 
+    # ── /download command ─────────────────────────────────────────────────────
+    @bot.on_message(filters.command("download") & filters.private)
+    async def download_command_handler(client: Client, m: Message):
+        _download_eligible[m.chat.id] = True
+        await m.reply_text(
+            "✅ **Now you are eligible to Download videos & pdf so Go ahead.**\n\n"
+            "📁 Send your `.txt` file or direct link to start downloading."
+        )
+
+    # ── main drm handler ─────────────────────────────────────────────────────
     @bot.on_message(filters.private & (filters.document | filters.text))
     async def call_drm_handler(bot: Client, m: Message):
+        # Skip all bot commands — also revokes /download eligibility for any other command
+        if m.text and m.text.startswith("/"):
+            if not m.text.startswith("/download"):
+                # Any other command cancels eligibility
+                _download_eligible.pop(m.chat.id, None)
+            return
+        # Skip non-.txt documents (e.g. PDF sent by user in pdfrename flow)
+        if m.document and not m.document.file_name.endswith(".txt"):
+            return
+        # Block download unless /download was sent first
+        if not _download_eligible.get(m.chat.id):
+            return
+        # Consume eligibility — one-time use, revoked after this
+        _download_eligible.pop(m.chat.id, None)
         await drm_handler(bot, m)

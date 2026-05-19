@@ -1,3 +1,5 @@
+import os
+import json
 from vars import OWNER, CREDIT
 
 processing_request = False
@@ -10,7 +12,29 @@ cwtoken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MjQyMzg3OTEsImNvbiI6
 cptoken = "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYzNjkyNjM0LCJvcmdJZCI6NjA5NzQyLCJ0eXBlIjoxLCJtb2JpbGUiOiI5MTk0MDQ0MDg3NDAiLCJuYW1lIjoiTXlyYSIsImVtYWlsIjoicml5YWhzaHJpdmFzdGF2NCs1MzMyQGdtYWlsLmNvbSIsImlzRmlyc3RMb2dpbiI6dHJ1ZSwiZGVmYXVsdExhbmd1YWdlIjoiRU4iLCJjb3VudHJ5Q29kZSI6IklOIiwiaXNJbnRlcm5hdGlvbmFsIjowLCJpc0RpeSI6dHJ1ZSwibG9naW5WaWEiOiJPdHAiLCJmaW5nZXJwcmludElkIjoiODZmN2RhMjMyMzgxNDk2YTliMjY4YzhkMTAxOGNkMGEiLCJpYXQiOjE3NTkyMTA3ODksImV4cCI6MTc1OTgxNTU4OX0.O3DG_gMpOUet2HKSmH1jK9EEWmjREEMh4cX7DW4yqqkCTzcV5C6-lr6zaY1ihhR4"
 pwtoken = "pwtoken"
 vidwatermark = '/d'
+pdfwatermark = '/d'
+videocover = '/d'
 raw_text2 = '480'
 quality = '480p'
 res = '854x480'
 topic = '/d'
+
+# ── pdfthumb — load from persistent store on start ───────────────────────────
+_THUMB_STORE = "pdfthumb_store.json"
+
+def _load_pdfthumb_from_store() -> str:
+    """Bot start par pdfthumb_store.json se last saved thumb load karo."""
+    if os.path.exists(_THUMB_STORE):
+        try:
+            with open(_THUMB_STORE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if data:
+                last_val = list(data.values())[-1]
+                if last_val and last_val != "/d":
+                    print(f"[globals] pdfthumb loaded from store: {str(last_val)[:60]}")
+                    return last_val
+        except Exception as e:
+            print(f"[globals] pdfthumb store load error: {e}")
+    return "/d"
+
+pdfthumb = _load_pdfthumb_from_store()

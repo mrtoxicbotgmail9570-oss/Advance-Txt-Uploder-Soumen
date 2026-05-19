@@ -116,7 +116,7 @@ def register_settings_handlers(bot):
         except Exception as e:
             await editable.edit(f"<b>❌ Failed to set Caption Style:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
         finally:
-            await input_msg.delete()
+            await input_msg.delete(True)
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("file_name_command"))
     async def handle_caption(client, callback_query):
@@ -134,40 +134,100 @@ def register_settings_handlers(bot):
         except Exception as e:
             await editable.edit(f"<b>❌ Failed to set End File Name:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
         finally:
-            await input_msg.delete()
+            await input_msg.delete(True)
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("viideo_thumbnail_command"))
     async def video_thumbnail(client, callback_query):
         user_id = callback_query.from_user.id
-        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="thummbnail_command")]])
-        editable = await callback_query.message.edit(f"Send the Video Thumb URL or Send /d \n<blockquote><b>Note </b>- For document format send : No</blockquote>", reply_markup=keyboard)
+        first_name = callback_query.from_user.first_name
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🟢 Set Video Cover", callback_data="set_video_cover_command")],
+            [InlineKeyboardButton("👁️ View Video Cover", callback_data="view_video_cover_command")],
+            [InlineKeyboardButton("❌ Delete Video Cover", callback_data="del_video_cover_command")],
+            [InlineKeyboardButton("🔙 Back to Thumbnail", callback_data="thummbnail_command")]
+        ])
+        await callback_query.message.edit(
+            f"**🎥 Video Cover Settings**\n\n"
+            f"**Welcome [{first_name}](tg://user?id={user_id})**\n\n"
+            f"**😍You can Change Video Cover Photo Also tap on /changecover to do this.\n\n"
+            f"<blockquote>Video Cover globally set hoga jo /renamevideo aur /setvideocover commands mein use hoga.\n"
+            f"Sirf Telegram direct photo supported hai.</blockquote>",
+            reply_markup=keyboard
+        )
+# .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
+    @bot.on_callback_query(filters.regex("set_video_cover_command"))
+    async def set_video_cover_settings(client, callback_query):
+        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Video Cover", callback_data="viideo_thumbnail_command")]])
+        editable = await callback_query.message.edit(
+            "**🖼️ Video Cover Set**\n\n"
+            "📸 **Direct Telegram se photo bhejo** as Global Video Cover.\n\n"
+            "<blockquote>⚠️ Note: Sirf Telegram photo supported hai. URL supported nahi hai.\n"
+            "Send /d to disable cover.</blockquote>",
+            reply_markup=keyboard
+        )
         input_msg = await bot.listen(editable.chat.id)
         try:
-            if input_msg.text.startswith("http://") or input_msg.text.startswith("https://"):
-                globals.thumb = input_msg.text
-                await editable.edit(f"✅ Thumbnail set successfully from the URL !", reply_markup=keyboard)
-            elif input_msg.text.lower() == "/d":
-                globals.thumb = "/d"
-                await editable.edit(f"✅ Thumbnail set to default !", reply_markup=keyboard)
+            if input_msg.text and input_msg.text.strip().lower() == "/d":
+                globals.videocover = "/d"
+                from video_cover import delete_videocover_for_user
+                delete_videocover_for_user(callback_query.from_user.id)
+                await editable.edit("✅ **Video Cover Disabled!**", reply_markup=keyboard)
+            elif input_msg.photo:
+                file_id = input_msg.photo.file_id
+                globals.videocover = file_id
+                from video_cover import save_videocover_for_user
+                save_videocover_for_user(callback_query.from_user.id, file_id)
+                await editable.edit("✅ **Video Cover set from photo!**\n<blockquote>Ye cover ab videos mein use hoga.</blockquote>", reply_markup=keyboard)
             else:
-                globals.thumb = input_msg.text
-                await editable.edit(f"✅ Video in Document Format is enabled !", reply_markup=keyboard)
+                await editable.edit("❌ Invalid input! Sirf Telegram photo bhejein.", reply_markup=keyboard)
         except Exception as e:
-            await editable.edit(f"<b>❌ Failed to set thumbnail:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
+            await editable.edit(f"<b>❌ Failed:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
         finally:
-            await input_msg.delete()
+            await input_msg.delete(True)
+# .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
+    @bot.on_callback_query(filters.regex("view_video_cover_command"))
+    async def view_video_cover_settings(client, callback_query):
+        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Video Cover", callback_data="viideo_thumbnail_command")]])
+        from video_cover import get_videocover_for_user
+        saved = get_videocover_for_user(callback_query.from_user.id)
+        if saved == "/d" or not saved:
+            await callback_query.message.edit("📭 **Video Cover set nahi hai.**\n\nUse /setvideocover to set one.", reply_markup=keyboard)
+            return
+        try:
+            await callback_query.message.reply_photo(
+                photo=saved,
+                caption="🎥 **Your Current Video Cover**\n<blockquote>Status: ✅ Active</blockquote>"
+            )
+            await callback_query.message.edit("✅ Cover shown above.", reply_markup=keyboard)
+        except Exception as e:
+            await callback_query.message.edit(f"🎥 Video Cover set hai.\n⚠️ Preview error: {str(e)[:100]}", reply_markup=keyboard)
+# .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
+    @bot.on_callback_query(filters.regex("del_video_cover_command"))
+    async def del_video_cover_settings(client, callback_query):
+        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Video Cover", callback_data="viideo_thumbnail_command")]])
+        from video_cover import get_videocover_for_user, delete_videocover_for_user
+        saved = get_videocover_for_user(callback_query.from_user.id)
+        if saved == "/d" or not saved:
+            await callback_query.message.edit("📭 **Koi Video Cover set nahi hai.**", reply_markup=keyboard)
+            return
+        globals.videocover = "/d"
+        delete_videocover_for_user(callback_query.from_user.id)
+        await callback_query.message.edit("❌ **Video Cover deleted!**\n\nUse /setvideocover to set a new one.", reply_markup=keyboard)
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("pddf_thumbnail_command"))
     async def pdf_thumbnail_button(client, callback_query):
-      keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="thummbnail_command")]])
-      caption = ("<b>⋅ This Feature is Not Working Yet ⋅</b>")
-      await callback_query.message.edit_media(
-        InputMediaPhoto(
-            media="https://graph.org/file/4f489f48098e89b7240b2-0c35f0c5a758db2cb1.jpg",
-            caption=caption
-        ),
-        reply_markup=keyboard
-      )
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton("💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
+            [InlineKeyboardButton("🔙 Back to Settings", callback_data="thummbnail_command")]
+        ])
+        await callback_query.message.edit(
+            "**📸 PDF Thumbnail**\n\n"
+            "⚠️ **Temporary Unavailable**\n"
+            "This feature is not available in this Bot.\n\n"
+            "Use Powerful Rename Bot **@Cinderella_renameBot**\n"
+            "If you want to Generate your String Session so use **@Cinderella_StringBot**",
+            reply_markup=keyboard
+        )
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("add_credit_command"))
     async def credit(client, callback_query):
@@ -185,7 +245,7 @@ def register_settings_handlers(bot):
         except Exception as e:
             await editable.edit(f"<b>❌ Failed to set Credit:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
         finally:
-            await input_msg.delete()
+            await input_msg.delete(True)
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("cp_token_command"))
     async def handle_token(client, callback_query):
@@ -199,7 +259,7 @@ def register_settings_handlers(bot):
         except Exception as e:
             await editable.edit(f"<b>❌ Failed to set Classplus Token:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
         finally:
-            await input_msg.delete()
+            await input_msg.delete(True)
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("pw_token_command"))
     async def handle_token(client, callback_query):
@@ -213,7 +273,7 @@ def register_settings_handlers(bot):
         except Exception as e:
             await editable.edit(f"<b>❌ Failed to set Physics Wallah Token:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
         finally:
-            await input_msg.delete()
+            await input_msg.delete(True)
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("cw_token_command"))
     async def handle_token(client, callback_query):
@@ -231,37 +291,45 @@ def register_settings_handlers(bot):
         except Exception as e:
             await editable.edit(f"<b>❌ Failed to set Careerwill Token:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
         finally:
-            await input_msg.delete()
+            await input_msg.delete(True)
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("video_wateermark_command"))
     async def video_watermark(client, callback_query):
-        user_id = callback_query.from_user.id
-        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="wattermark_command")]])
-        editable = await callback_query.message.edit(f"**Send Video Watermark text or Send /d**", reply_markup=keyboard)
-        input_msg = await bot.listen(editable.chat.id)
-        try:
-            if input_msg.text.lower() == "/d":
-                globals.vidwatermark = "/d"
-                await editable.edit(f"**Video Watermark Disabled ✅** !", reply_markup=keyboard)
-            else:
-                globals.vidwatermark = input_msg.text
-                await editable.edit(f"Video Watermark `{globals.vidwatermark}` enabled ✅!", reply_markup=keyboard)
-        except Exception as e:
-            await editable.edit(f"<b>❌ Failed to set Watermark:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
-        finally:
-            await input_msg.delete()
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton("💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
+            [InlineKeyboardButton("🔙 Back to Settings", callback_data="wattermark_command")]
+        ])
+        await callback_query.message.edit(
+            "**🎥 Video Watermark**\n\n"
+            "⚠️ **Temporary Unavailable**\n"
+            "This feature is not available in this Bot.\n\n"
+            "Use Powerful Rename Bot **@Cinderella_renameBot**\n"
+            "If you want to Generate your String Session so use **@Cinderella_StringBot**",
+            reply_markup=keyboard
+        )
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("pdf_wateermark_command"))
     async def pdf_watermark_button(client, callback_query):
-      keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="wattermark_command")]])
-      caption = ("<b>⋅ This Feature is Not Working Yet ⋅</b>")
-      await callback_query.message.edit_media(
-        InputMediaPhoto(
-            media="https://envs.sh/GVI.jpg",
-            caption=caption
-        ),
-        reply_markup=keyboard
-      )
+        user_id = callback_query.from_user.id
+        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Settings", callback_data="wattermark_command")]])
+        editable = await callback_query.message.edit(
+            f"**Send PDF Watermark text or Send /d to disable**\n"
+            f"<blockquote><b>Note:</b> Only text supported (e.g. Sharukh Khan, Munna). "
+            f"It will appear at top-right on every PDF page with 30% opacity at 45° angle.</blockquote>",
+            reply_markup=keyboard
+        )
+        input_msg = await bot.listen(editable.chat.id)
+        try:
+            if input_msg.text.lower() == "/d":
+                globals.pdfwatermark = "/d"
+                await editable.edit(f"**PDF Watermark Disabled ✅** !", reply_markup=keyboard)
+            else:
+                globals.pdfwatermark = input_msg.text
+                await editable.edit(f"PDF Watermark `{globals.pdfwatermark}` enabled ✅!", reply_markup=keyboard)
+        except Exception as e:
+            await editable.edit(f"<b>❌ Failed to set PDF Watermark:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
+        finally:
+            await input_msg.delete(True)
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("quality_command"))
     async def handle_quality(client, callback_query):
@@ -308,7 +376,7 @@ def register_settings_handlers(bot):
         except Exception as e:
             await editable.edit(f"<b>❌ Failed to set Video Quality:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
         finally:
-            await input_msg.delete()
+            await input_msg.delete(True)
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("topic_command"))
     async def video_watermark(client, callback_query):
@@ -326,7 +394,7 @@ def register_settings_handlers(bot):
         except Exception as e:
             await editable.edit(f"<b>❌ Failed to set Topic in Caption:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
         finally:
-            await input_msg.delete()
+            await input_msg.delete(True)
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
     @bot.on_callback_query(filters.regex("resset_command"))
     async def credit(client, callback_query):
@@ -344,16 +412,27 @@ def register_settings_handlers(bot):
                 globals.cptoken = "cptoken"
                 globals.pwtoken = "pwtoken"
                 globals.vidwatermark = '/d'
+                globals.pdfwatermark = '/d'
+                globals.videocover = '/d'
+                globals.pdfthumb = '/d'
                 globals.raw_text2 = '480'
                 globals.quality = '480p'
                 globals.res = '854x480'
                 globals.topic = '/d'
+                # ← pdfthumb persistent store bhi clear karo (settings reset = thumb bhi reset)
+                _THUMB_STORE = "pdfthumb_store.json"
+                import os as _os
+                if _os.path.exists(_THUMB_STORE):
+                    _os.remove(_THUMB_STORE)
+                _VCOVER_STORE = "videocover_store.json"
+                if _os.path.exists(_VCOVER_STORE):
+                    _os.remove(_VCOVER_STORE)
                 await editable.edit(f"✅ Settings reset as default !", reply_markup=keyboard)
             else:
                 await editable.edit(f"✅ Settings Not Changed !", reply_markup=keyboard)
         except Exception as e:
             await editable.edit(f"<b>❌ Failed to Change Settings:</b>\n<blockquote expandable>{str(e)}</blockquote>", reply_markup=keyboard)
         finally:
-            await input_msg.delete()
+            await input_msg.delete(True)
 
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
