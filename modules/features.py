@@ -186,7 +186,7 @@ def register_feature_handlers(bot):
     @bot.on_callback_query(filters.regex("^pdfrename_command$"))
     async def pdfrename_feat_button(client, callback_query):
       keyboard = InlineKeyboardMarkup([
-          [InlineKeyboardButton("💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton("💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
+          [InlineKeyboardButton("💥𝐂𝐢𝐧𝐝𝐞𝐫𝐞𝐥𝐥𝐚 𝐑𝐞𝐜𝐚𝐩𝐭𝐢𝐨𝐧", url="https://t.me/Cinderella_recaptionBot"), InlineKeyboardButton("💥𝐂𝐢𝐧𝐝𝐞𝐫𝐞𝐥𝐥𝐚 𝐒𝐭𝐫𝐢𝐧𝐠", url="https://t.me/Cinderella_StringBot")],
           [InlineKeyboardButton("🔙 Back to PDF Features", callback_data="pdf_features_command")]
       ])
       caption = (
@@ -198,7 +198,7 @@ def register_feature_handlers(bot):
           f"3. Then send the new name (without .pdf)\n"
           f"4. Bot renames and re-uploads with new name\n"
           f"✅ PDF Thumbnail (if set) is applied automatically.</blockquote>\n\n"
-          f"Use Powerful Rename Bot **@Cinderella_renameBot**\n"
+          f"Use Powerful Recaption Bot **@Cinderella_recaptionBot**\n"
           f"If you want to Generate your String Session so use **@Cinderella_StringBot**"
       )
       await callback_query.message.edit_media(
@@ -214,14 +214,14 @@ def register_feature_handlers(bot):
     @bot.on_callback_query(filters.regex("^pdfthumb_command$"))
     async def pdfthumb_feat_button(client, callback_query):
       keyboard = InlineKeyboardMarkup([
-          [InlineKeyboardButton("💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton("💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
+          [InlineKeyboardButton("💥𝐂𝐢𝐧𝐝𝐞𝐫𝐞𝐥𝐥𝐚 𝐑𝐞𝐜𝐚𝐩𝐭𝐢𝐨𝐧", url="https://t.me/Cinderella_recaptionBot"), InlineKeyboardButton("💥𝐂𝐢𝐧𝐝𝐞𝐫𝐞𝐥𝐥𝐚 𝐒𝐭𝐫𝐢𝐧𝐠", url="https://t.me/Cinderella_StringBot")],
           [InlineKeyboardButton("🔙 Back to PDF Features", callback_data="pdf_features_command")]
       ])
       caption = (
           "**🖼️ PDF Thumbnail Feature**\n\n"
           "⚠️ **Temporary Unavailable**\n"
           "This feature is not available in this Bot.\n\n"
-          "Use Powerful Rename Bot **@Cinderella_renameBot**\n"
+          "Use Powerful Recaption Bot **@Cinderella_recaptionBot**\n"
           "If you want to Generate your String Session so use **@Cinderella_StringBot**"
       )
       await callback_query.message.edit_media(

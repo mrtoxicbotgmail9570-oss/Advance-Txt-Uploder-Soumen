@@ -31,13 +31,13 @@ PWAPI2 = "https://anonymouspwplayer-ce3f42358cca.herokuapp.com/pw"
 
 # ── Random image list ────────────────────────────────────────────────────────
 image_list = [
-    "https://graph.org/file/417cc7326cab9036c0152-f6a281db2a6975dfa9.jpg",
-    "https://graph.org/file/033121ad32291bcaddd01-d91ae4a1f7ca9378fc.jpg",
-    "https://graph.org/file/45f48779e0aa39709d1e8-4c024567d60f6ec5c2.jpg",
-    "https://graph.org/file/6ccdd92af77784c9d367e-a4ba6f10456656bbbd.jpg",
-    "https://graph.org/file/b23084c3e9124e14e18ec-d385f8f9c8b1635a2e.jpg",
-    "https://graph.org/file/29c4511ee7a4653d22fe1-67906a2a8392895644.jpg",
-    "https://graph.org/file/b45300f1cd068ad8f1895-fa23a3a1ad25789597.jpg",
+    "https://graph.org/file/41f315a54e91963176271-084a885105ba946f5e.jpg",
+    "https://graph.org/file/e45d8d37be0c22a9cbbfa-3f2796849a1b13643a.jpg",
+    "https://graph.org/file/2d3ba7771a207e4ab33aa-272463dad4b5338502.jpg",
+    "https://graph.org/file/97d3d6a3c21bc9bdfa000-748da0a998885a9aaa.jpg",
+    "https://graph.org/file/b90ad7792c1d6b1b0d0ad-22be3904ec15293242.jpg",
+    "https://graph.org/file/b2d5f4c1abab45da76a80-699357bf49c4bbb721.jpg",
+    "https://graph.org/file/7fcefd140feafb524a0f6-0172a531df2ac35c9c.jpg",
 ]
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -162,11 +162,11 @@ async def drm_handler(bot: Client, m: Message):
             other_count += 1
                 
     if not links:
-        await m.reply_text("<b>🔹I LOVE YOU💕😘.</b>")
+        await m.reply_text("<b>🔹𝐈 𝐋𝐎𝐕𝐄 𝐘𝐎𝐔💕😘.</b>")
         return
 
     if m.document:
-        editable = await m.reply_text(f"**(1). Total 🔗 links found are {len(links)}\n<blockquote>•PDF : {pdf_count}      •V2 : {v2_count}\n•Img : {img_count}      •YT : {yt_count}\n•zip : {zip_count}       •m3u8 : {m3u8_count}\n•drm : {drm_count}      •Other : {other_count}\n•mpd : {mpd_count}</blockquote>\nSend From where you want to download😉.\n\nYour Are On Step: 1/7💥**")
+        editable = await m.reply_text(f"**(1).🖤 𝐓𝐨𝐭𝐚𝐥 🔗 𝐥𝐢𝐧𝐤𝐬 𝐟𝐨𝐮𝐧𝐝 𝐚𝐫𝐞 {len(links)}\n<blockquote>•𝐏𝐃𝐅 : {pdf_count}      •𝐕𝟐 : {v2_count}\n•𝐈𝐌𝐆 : {img_count}      •𝐘𝐓 : {yt_count}\n•𝐙𝐈𝐏 : {zip_count}       •𝐌𝟑𝐔𝟖 : {m3u8_count}\n•𝐃𝐑𝐌 : {drm_count}      •𝐎𝐭𝐡𝐞𝐫 : {other_count}\n•𝐌𝐏𝐃 : {mpd_count}</blockquote>\n𝐒𝐞𝐧𝐝 𝐅𝐫𝐨𝐦 𝐰𝐡𝐞𝐫𝐞 𝐲𝐨𝐮 𝐰𝐚𝐧𝐭 𝐭𝐨 𝐝𝐨𝐰𝐧𝐥𝐨𝐚𝐝🦍.\n\n𝐘𝐨𝐮 𝐀𝐫𝐞 𝐎𝐧 𝐒𝐭𝐞𝐩: 𝟏/𝟕⚫**")
         try:
             input0: Message = await bot.listen(editable.chat.id, timeout=200)
             raw_text = input0.text
@@ -175,25 +175,25 @@ async def drm_handler(bot: Client, m: Message):
             raw_text = '1'
     
         if int(raw_text) > len(links) :
-            await editable.edit(f"🔹**Enter number in range of Index (01-{len(links)})**")
+            await editable.edit(f"🔹**𝐄𝐧𝐭𝐞𝐫 𝐧𝐮𝐦𝐛𝐞𝐫 𝐢𝐧 𝐫𝐚𝐧𝐠𝐞 𝐨𝐟 𝐲𝐨𝐮𝐫 𝐭𝐨𝐭𝐚𝐥 𝐥𝐢𝐧𝐤𝐬 (01-{len(links)})**")
             processing_request = False  # Reset the processing flag
             await m.reply_text("🔹**Processing Canclled......  **")
             return
 
-        await editable.edit(f"**(2). Enter Batch Name or send  /Bro\n\nYour Are On Step: 2/7💥**")
+        await editable.edit(f"**(2).🧡 𝐄𝐧𝐭𝐞𝐫 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 𝐨𝐫 𝐬𝐞𝐧𝐝  /Sis\n\n𝐘𝐨𝐮 𝐀𝐫𝐞 𝐎𝐧 𝐒𝐭𝐞𝐩: 𝟐/𝟕🟠**")
         try:
             input1: Message = await bot.listen(editable.chat.id, timeout=200)
             raw_text0 = input1.text
             await input1.delete(True)
         except asyncio.TimeoutError:
-            raw_text0 = '/Bro'
+            raw_text0 = '/Sis'
       
-        if raw_text0 == '/Bro':
+        if raw_text0 == '/Sis':
             b_name = file_name.replace('_', ' ')
         else:
             b_name = raw_text0
 
-        await editable.edit("**(3). Enter resolution.\n Eg : 144, 240, 360, 480, 720 or 1080😚\n\nYour Are On Step: 3/7💥**")
+        await editable.edit("**(3).💚 𝐄𝐧𝐭𝐞𝐫 𝐫𝐞𝐬𝐨𝐥𝐮𝐭𝐢𝐨𝐧.\n 𝐄𝐠 : 𝟏𝟒𝟒, 𝟐𝟒𝟎, 𝟑𝟔𝟎, 𝟒𝟖𝟎, 𝟕𝟐𝟎 𝐨𝐫 𝟏𝟎𝟖𝟎\n\n𝐘𝐨𝐮 𝐀𝐫𝐞 𝐎𝐧 𝐒𝐭𝐞𝐩: 𝟑/𝟕🟢**")
         try:
             input2: Message = await bot.listen(editable.chat.id, timeout=300)
             raw_text2 = input2.text
@@ -219,7 +219,7 @@ async def drm_handler(bot: Client, m: Message):
             res = "UN"
         quality = f"{raw_text2}p"
 
-        await editable.edit("**(4). Enter Your PW Token or send /Vip to use Your Set Token(in Settings)😎.\n\nYour Are On Step: 4/7💥**")
+        await editable.edit("**(4).💛 𝐄𝐧𝐭𝐞𝐫 𝐘𝐨𝐮𝐫 𝐏𝐖 𝐓𝐨𝐤𝐞𝐧 𝐨𝐫 𝐬𝐞𝐧𝐝 /Vip 𝐭𝐨 𝐮𝐬𝐞 𝐘𝐨𝐮𝐫 𝐒𝐞𝐭 𝐓𝐨𝐤𝐞𝐧(𝐢𝐧 𝐒𝐞𝐭𝐭𝐢𝐧𝐠𝐬).\n\n𝐘𝐨𝐮 𝐀𝐫𝐞 𝐎𝐧 𝐒𝐭𝐞𝐩: 𝟒/𝟕🟡**")
         try:
             input_tok: Message = await bot.listen(editable.chat.id, timeout=300)
             raw_tok = input_tok.text
@@ -231,7 +231,7 @@ async def drm_handler(bot: Client, m: Message):
         else:
             pwtoken = raw_tok
 
-        await editable.edit("**(5). Enter Your Credit Name or send /Sobi to Use Your Set Credit Name(in the Settings).\nSupports: `Text|URL` for hyperlink 😎.\n\nYour Are On Step: 5/7💥**")
+        await editable.edit("**(5).❤️ 𝐄𝐧𝐭𝐞𝐫 𝐘𝐨𝐮𝐫 𝐂𝐫𝐞𝐝𝐢𝐭 𝐍𝐚𝐦𝐞 𝐨𝐫 𝐬𝐞𝐧𝐝 /Sobi 𝐭𝐨 𝐔𝐬𝐞 𝐘𝐨𝐮𝐫 𝐎𝐰𝐧 𝐂𝐫𝐞𝐝𝐢𝐭 𝐍𝐚𝐦𝐞(𝐢𝐧 𝐭𝐡𝐞 𝐒𝐞𝐭𝐭𝐢𝐧𝐠𝐬).\n𝐀𝐥𝐬𝐨 𝐒𝐮𝐩𝐩𝐨𝐫𝐭𝐬: *𝐓𝐞𝐱𝐭|𝐔𝐑𝐋* 𝐟𝐨𝐫 𝐡𝐲𝐩𝐞𝐫𝐥𝐢𝐧𝐤.\n\n𝐘𝐨𝐮 𝐀𝐫𝐞 𝐎𝐧 𝐒𝐭𝐞𝐩: 𝟓/𝟕🔴**")
         try:
             input3: Message = await bot.listen(editable.chat.id, timeout=200)
             raw_text3 = input3.text
@@ -243,7 +243,7 @@ async def drm_handler(bot: Client, m: Message):
         else:
             CR = parse_credit(raw_text3)
 
-        await editable.edit("**(6). Now send the Thumb URL\nEg: Ends With .jpg**\n\nor Send `no`\n\nYour Are On Step: 6/7💥")
+        await editable.edit("**(6).💙 𝐍𝐨𝐰 𝐬𝐞𝐧𝐝 𝐭𝐡𝐞 𝐓𝐡𝐮𝐦𝐛 𝐔𝐑𝐋\n𝐄𝐠: 𝐌𝐮𝐬𝐭 𝐛𝐞 𝐄𝐧𝐝 𝐖𝐢𝐭𝐡.𝐣𝐩𝐠\n\n𝐎𝐫 𝐒𝐞𝐧𝐝 `no`\n\n𝐘𝐨𝐮 𝐀𝐫𝐞 𝐎𝐧 𝐒𝐭𝐞𝐩: 𝟔/𝟕🔵**")
         try:
             input6: Message = await bot.listen(editable.chat.id, timeout=200)
             raw_text6 = input6.text
@@ -282,7 +282,7 @@ async def drm_handler(bot: Client, m: Message):
         else:
             thumb = globals.thumb
 
-        await editable.edit("__**(7). ⚠️Provide the Channel ID or send.  /Baby__\n\n<blockquote><i>🔹 Make me an admin to upload.\n\nExample: Channel ID = -100XXXXXXXXXXX\n\nYour Are On Step: 7/7💥**")
+        await editable.edit("__**(7).💜 𝐒𝐞𝐧𝐝 𝐭𝐡𝐞 𝐂𝐡𝐚𝐧𝐧𝐞𝐥 𝐈𝐃 𝐨𝐫 𝐬𝐞𝐧𝐝 /Baby__\n\n<blockquote><i>🔹 𝐌𝐚𝐤𝐞 𝐦𝐞 𝐚𝐧 𝐚𝐝𝐦𝐢𝐧 𝐬𝐨 𝐭𝐡𝐚𝐭 𝐢 𝐜𝐚𝐧 𝐮𝐩𝐥𝐨𝐚𝐝.\n\n𝐄𝐱𝐚𝐦𝐩𝐥𝐞: 𝐂𝐡𝐚𝐧𝐧𝐞𝐥 𝐈𝐃 = -𝟏𝟎𝟎𝟏𝟒𝟑𝐗𝐗𝐗𝐗𝐗𝟕𝟖𝟔\n\n𝐘𝐨𝐮 𝐀𝐫𝐞 𝐎𝐧 𝐒𝐭𝐞𝐩: 𝟕/𝟕🟣**")
         try:
             input7: Message = await bot.listen(editable.chat.id, timeout=200)
             raw_text7 = input7.text
@@ -303,18 +303,18 @@ async def drm_handler(bot: Client, m: Message):
             channel_id = m.chat.id
             CR = globals.CR
             path = os.path.join("downloads", "Free Batch")
-            editable = await m.reply_text("**(1). PDF/Image Link Captured ✅\n\nSettings se Credit Name automatic lagega 🌚.\n\nYour Are On Step: 1/2💥**")
-            await editable.edit("**(2). Enter Batch Name or send   /unknown if you don't know Name😅.\n\nAnd baaki Chize jo Settings\nMe Set hai Wo automatic Lag jaayegi.\n\nJaise ki Credit Name 🌚.\n\nYour Are On Step: 2/2💥**")
+            editable = await m.reply_text("**(1).🧡 𝐘𝐨𝐮𝐫 𝐋𝐢𝐧𝐤 𝐢𝐬 𝐂𝐚𝐩𝐭𝐮𝐫𝐞𝐝✅\n\n𝐒𝐞𝐭𝐭𝐢𝐧𝐠𝐬 𝐬𝐞 𝐂𝐫𝐞𝐝𝐢𝐭 𝐍𝐚𝐦𝐞 𝐚𝐮𝐭𝐨𝐦𝐚𝐭𝐢𝐜 𝐥𝐚𝐠𝐞𝐠𝐚 🌚.\n\n𝐘𝐨𝐮 𝐀𝐫𝐞 𝐎𝐧 𝐒𝐭𝐞𝐩: 𝟏/𝟐🟠**")
+            await editable.edit("**(2).💜 𝐄𝐧𝐭𝐞𝐫 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 𝐨𝐫 𝐬𝐞𝐧𝐝 /unknown 𝐢𝐟 𝐲𝐨𝐮 𝐝𝐨𝐧'𝐭 𝐤𝐧𝐨𝐰 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞😅.\n\n𝐀𝐧𝐝 𝐛𝐚𝐚𝐤𝐢 𝐂𝐡𝐢𝐳𝐞 𝐣𝐨 𝐒𝐞𝐭𝐭𝐢𝐧𝐠𝐬\n𝐌𝐞 𝐒𝐞𝐭 𝐡𝐚𝐢 𝐖𝐨 𝐚𝐮𝐭𝐨𝐦𝐚𝐭𝐢𝐜 𝐋𝐚𝐠 𝐣𝐚𝐚𝐲𝐞𝐠𝐢.\n\n𝐉𝐚𝐢𝐬𝐞 𝐤𝐢 𝐂𝐫𝐞𝐝𝐢𝐭 𝐍𝐚𝐦𝐞🦍.\n\n𝐘𝐨𝐮 𝐀𝐫𝐞 𝐎𝐧 𝐒𝐭𝐞𝐩: 𝟐/𝟐🟣**")
             try:
                 input_bn: Message = await bot.listen(editable.chat.id, filters=filters.text & filters.user(m.from_user.id))
                 raw_text0 = input_bn.text
                 await input_bn.delete(True)
             except Exception:
                 raw_text0 = '/unknown'
-            b_name = '💥Contact: @CinderellaContactBot' if raw_text0 == '/unknown' else raw_text0
+            b_name = '💥𝐂𝐨𝐧𝐭𝐚𝐜𝐭: @CinderellaContactBot' if raw_text0 == '/unknown' else raw_text0
             await editable.delete()
         else:
-            editable = await m.reply_text(f"**(1.) Great, Your Link is Captured 🙈\n╭━━━━❰ᴇɴᴛᴇʀ ʀᴇꜱᴏʟᴜᴛɪᴏɴ❱━━➣ \n┣━━⪼ send `144`  for 144p\n┣━━⪼ send `240`  for 240p\n┣━━⪼ send `360`  for 360p\n┣━━⪼ send `480`  for 480p\n┣━━⪼ send `720`  for 720p\n┣━━⪼ send `1080` for 1080p\n╰━━⌈⚡[🦋`{CREDIT}`🦋]⚡⌋━━➣\n\nYour Are On Step: 1/2💥**")
+            editable = await m.reply_text(f"**(1.)💕 𝐅𝐚𝐧𝐭𝐚𝐬𝐭𝐢𝐜, 𝐘𝐨𝐮𝐫 𝐋𝐢𝐧𝐤 𝐢𝐬 𝐂𝐚𝐩𝐭𝐮𝐫𝐞𝐝\n╭━━━━❰𝐄𝐍𝐓𝐄𝐑 𝐑𝐄𝐒𝐎𝐋𝐔𝐓𝐈𝐎𝐍❱━━➣ \n┣━━⪼ send `144`  for 144p\n┣━━⪼ send `240`  for 240p\n┣━━⪼ send `360`  for 360p\n┣━━⪼ send `480`  for 480p\n┣━━⪼ send `720`  for 720p\n┣━━⪼ send `1080` for 1080p\n╰━━⌈⚡[🦋`{CREDIT}`🦋]⚡⌋━━➣\n\n𝐘𝐨𝐮 𝐀𝐫𝐞 𝐎𝐧 𝐒𝐭𝐞𝐩: 𝟏/𝟐🟠**")
             input2: Message = await bot.listen(editable.chat.id, filters=filters.text & filters.user(m.from_user.id))
             raw_text2 = input2.text
             quality = f"{raw_text2}p"
@@ -338,14 +338,14 @@ async def drm_handler(bot: Client, m: Message):
             except Exception:
                 res = "UN"
 
-            await editable.edit("**(2). Enter Batch Name or send     /unknow if you don't know Name😅.\n\nAnd baaki Chize jo Settings\nMe Set hai Wo automatic Lag jaayegi.\n\nJaise ki Credit Name 🌚.\n\nYour Are On Step: 2/2💥**")
+            await editable.edit("**(2).💙 𝐄𝐧𝐭𝐞𝐫 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 𝐨𝐫 𝐬𝐞𝐧𝐝 /unknown 𝐢𝐟 𝐲𝐨𝐮 𝐝𝐨𝐧'𝐭 𝐤𝐧𝐨𝐰 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞😅.\n\n𝐀𝐧𝐝 𝐛𝐚𝐚𝐤𝐢 𝐂𝐡𝐢𝐳𝐞 𝐣𝐨 𝐒𝐞𝐭𝐭𝐢𝐧𝐠𝐬\n𝐌𝐞 𝐒𝐞𝐭 𝐡𝐚𝐢 𝐖𝐨 𝐚𝐮𝐭𝐨𝐦𝐚𝐭𝐢𝐜 𝐋𝐚𝐠 𝐣𝐚𝐚𝐲𝐞𝐠𝐢.\n\n𝐉𝐚𝐢𝐬𝐞 𝐤𝐢 𝐂𝐫𝐞𝐝𝐢𝐭 𝐍𝐚𝐦𝐞\n\n𝐘𝐨𝐮 𝐀𝐫𝐞 𝐎𝐧 𝐒𝐭𝐞𝐩: 𝟐/𝟐🔵**")
             try:
                 input_bn: Message = await bot.listen(editable.chat.id, filters=filters.text & filters.user(m.from_user.id))
                 raw_text0 = input_bn.text
                 await input_bn.delete(True)
             except Exception:
                 raw_text0 = '/unknow'
-            b_name = '💥Contact: @CinderellaContactBot' if raw_text0 == '/unknow' else raw_text0
+            b_name = '💥𝐂𝐨𝐧𝐭𝐚𝐜𝐭: @CinderellaContactBot' if raw_text0 == '/unknow' else raw_text0
 
             CR = globals.CR
             raw_text = '1'
@@ -384,7 +384,7 @@ async def drm_handler(bot: Client, m: Message):
     try:
         for i in range(arg-1, len(links)):
             if globals.cancel_requested:
-                await m.reply_text("🌼**STOPPED**🌼")
+                await m.reply_text("🌼**𝐒𝐓𝐎𝐏𝐏𝐄𝐃**🌼")
                 globals.processing_request = False
                 globals.cancel_requested = False
                 return
@@ -467,7 +467,7 @@ async def drm_handler(bot: Client, m: Message):
                         url = None
                         keys_string = None
                 except Exception as e:
-                    await bot.send_message(channel_id, f'⚠️**Downloading Failed**⚠️\n**Name** =>> `{str(count).zfill(3)} {name1}`\n**Url** =>> {url}\n\n<blockquote expandable><i><b>Failed Reason to sign url: {str(e)}</b></i></blockquote>', disable_web_page_preview=True)
+                    await bot.send_message(channel_id, f'⚠️**𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐢𝐧𝐠 𝐅𝐚𝐢𝐥𝐞𝐝**⚠️\n**𝐍𝐚𝐦𝐞** =>> `{str(count).zfill(3)} {name1}`\n**𝐔𝐑𝐋** =>> {url}\n\n<blockquote expandable><i><b>𝐅𝐚𝐢𝐥𝐞𝐝 𝐑𝐞𝐚𝐬𝐨𝐧 𝐭𝐨 𝐬𝐢𝐠𝐧 𝐮𝐫𝐥: {str(e)}</b></i></blockquote>', disable_web_page_preview=True)
                     count += 1
                     failed_count += 1
                     continue
@@ -498,7 +498,7 @@ async def drm_handler(bot: Client, m: Message):
                     pass
                 else:
                     if pwtoken == "pwtoken" or not pwtoken:
-                        await bot.send_message(channel_id, f'⚠️ **PW Token not set!**\n**Name** =>> `{name1}`\n\n<blockquote>Please set your Physics Wallah token first via\n**Settings → Set Token → Physics Wallah**</blockquote>', disable_web_page_preview=True)
+                        await bot.send_message(channel_id, f'⚠️ **𝐏𝐖 𝐓𝐨𝐤𝐞𝐧 𝐧𝐨𝐭 𝐬𝐞𝐭!**\n**𝐍𝐚𝐦𝐞** =>> `{name1}`\n\n<blockquote>𝐏𝐥𝐞𝐚𝐬𝐞 𝐬𝐞𝐭 𝐲𝐨𝐮𝐫 𝐏𝐡𝐲𝐬𝐢𝐜𝐬 𝐖𝐚𝐥𝐥𝐚𝐡 𝐭𝐨𝐤𝐞𝐧 𝐟𝐢𝐫𝐬𝐭 𝐯𝐢𝐚:\n**𝐒𝐞𝐭𝐭𝐢𝐧𝐠𝐬 → 𝐒𝐞𝐭 𝐓𝐨𝐤𝐞𝐧 → 𝐏𝐡𝐲𝐬𝐢𝐜𝐬 𝐖𝐚𝐥𝐥𝐚𝐡**</blockquote>', disable_web_page_preview=True)
                         count += 1
                         failed_count += 1
                         continue
@@ -528,8 +528,8 @@ async def drm_handler(bot: Client, m: Message):
 #........................................................................................................................................................................................
             try:
                 if m.text:
-                    cc = f'**📹 VID_ID: {str(count).zfill(3)}.\n\n📝 Title: {name1} {res}.mkv\n\n<pre><code>📚 Batch Name: {b_name}</code></pre>\n\n📥 Extracted By♠ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
-                    cc1 = f'**💾 PDF_ID: {str(count).zfill(3)}.\n\n📝 Title: {name1} .pdf\n\n<pre><code>📚 Batch Name: {b_name}</code></pre>\n\n📥 Extracted By♠ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+                    cc = f'**🖲️𝐕𝐈𝐃_𝐈𝐃: {str(count).zfill(3)}.\n\n📝 𝐓𝐢𝐭𝐥𝐞: {name1} {res}.mkv\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞: {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+                    cc1 = f'**💾 𝐏𝐃𝐅_𝐈𝐃: {str(count).zfill(3)}.\n\n📝 𝐓𝐢𝐭𝐥𝐞: {name1} .pdf\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞: {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
                     cczip = f'[{name1}.zip]({link0})'
                     ccimg = f'[{name1}.jpg]({link0})'
                     ccm = f'[{name1}.mp3]({link0})'
@@ -537,20 +537,20 @@ async def drm_handler(bot: Client, m: Message):
                 else:
                     if topic == "/yes":
                         if caption == "/cc1":
-                            cc = f'**📹 VID_ID : {str(count).zfill(3)}.\n\n📝Title :{v_name} [{res}p].mkv\n\n<pre><code>📚 Batch Name : {b_name}</code></pre>\nTopic Name : {t_name}</b></blockquote>\n\n📥 Extracted By♠ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
-                            cc1 = f'**💾PDF_ID : {str(count).zfill(3)}.\n\n📝Title :{v_name}.pdf\n\n<pre><code>📚 Batch Name : {b_name}</code></pre>\nTopic Name : {t_name}</b></blockquote>\n\n📥 Extracted By♠ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
-                            cczip = f'[📁]Zip Id : {str(count).zfill(3)}\n**Zip Title :** `{v_name}.zip`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
-                            ccimg = f'[🖼️]Img Id : {str(count).zfill(3)}\n**Img Title :** `{v_name}.jpg`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
-                            cchtml = f'[🌐]Html Id : {str(count).zfill(3)}\n**Html Title :** `{v_name}.html`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
-                            ccyt = f'[🎥]Vid Id : {str(count).zfill(3)}\n**Video Title :** `{v_name}.mp4`\n<a href="{url}">__**Click Here to Watch Stream**__</a>\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
-                            ccm = f'[🎵]Mp3 Id : {str(count).zfill(3)}\n**Audio Title :** `{v_name}.mp3`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
+                            cc = f'**🖲️𝐕𝐈𝐃_𝐈𝐃 : {str(count).zfill(3)}.\n\n📝𝐓𝐢𝐭𝐥𝐞 :{v_name} [{res}p].mkv\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</code></pre>\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞: {t_name}</b></blockquote>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+                            cc1 = f'**💾𝐏𝐃𝐅_𝐈𝐃 : {str(count).zfill(3)}.\n\n📝𝐓𝐢𝐭𝐥𝐞 :{v_name}.pdf\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</code></pre>\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞 : {t_name}</b></blockquote>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+                            cczip = f'[📁]Zip Id : {str(count).zfill(3)}\n**Zip Title :** `{v_name}.zip`\n<blockquote><b>𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞 : {t_name}</b></blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**{CR}\n'
+                            ccimg = f'[🖼️]Img Id : {str(count).zfill(3)}\n**Img Title :** `{v_name}.jpg`\n<blockquote><b>𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞 : {t_name}</b></blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**{CR}\n'
+                            cchtml = f'[🌐]Html Id : {str(count).zfill(3)}\n**Html Title :** `{v_name}.html`\n<blockquote><b>𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞 : {t_name}</b></blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**{CR}\n'
+                            ccyt = f'[🎥]Vid Id : {str(count).zfill(3)}\n**Video Title :** `{v_name}.mp4`\n<a href="{url}">__**Click Here to Watch Stream**__</a>\n<blockquote><b>𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**{CR}\n'
+                            ccm = f'[🎵]Mp3 Id : {str(count).zfill(3)}\n**Audio Title :** `{v_name}.mp3`\n<blockquote><b>𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}\n𝐓𝐨𝐩𝐢𝐜 𝐍𝐚𝐦𝐞 : {t_name}</b></blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**{CR}\n'
                         elif caption == "/cc2":
-                            cc = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🎞️ Title :</b> {v_name}\n<b>├── Extention :  {CR} .mkv</b>\n<b>├── Resolution : [{res}]</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 Extracted By : {CR}**"
-                            cc1 = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>📁 Title :</b> {v_name}\n<b>├── Extention :  {CR} .pdf</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 Extracted By : {CR}**"
-                            cczip = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>📒 Title :</b> {v_name}\n<b>├── Extention :  {CR} .zip</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 Extracted By : {CR}**"
-                            ccimg = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🖼️ Title :</b> {v_name}\n<b>├── Extention :  {CR} .jpg</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 Extracted By : {CR}**"
-                            ccm = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🎵 Title :</b> {v_name}\n<b>├── Extention :  {CR} .mp3</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 Extracted By : {CR}**"
-                            cchtml = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🌐 Title :</b> {v_name}\n<b>├── Extention :  {CR} .html</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 Extracted By : {CR}**"
+                            cc = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🎞️ 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .mkv</b>\n<b>├── Resolution : [{res}]</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}**"
+                            cc1 = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>📁 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .pdf</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}**"
+                            cczip = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>📒 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .zip</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}**"
+                            ccimg = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🖼️ 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .jpg</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}**"
+                            ccm = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🎵 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .mp3</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}**"
+                            cchtml = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<blockquote><b>⋅ ─  {t_name}  ─ ⋅</b></blockquote>\n\n<b>🌐 𝐓𝐢𝐭𝐥𝐞 :</b> {v_name}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .html</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}**"
                         else:
                             cc = f'<blockquote><b>⋅ ─ {t_name} ─ ⋅</b></blockquote>\n<b>{str(count).zfill(3)}.</b> {v_name} [{res}p] .mkv'
                             cc1 = f'<blockquote><b>⋅ ─ {t_name} ─ ⋅</b></blockquote>\n<b>{str(count).zfill(3)}.</b> {v_name} .pdf'
@@ -560,19 +560,19 @@ async def drm_handler(bot: Client, m: Message):
                             cchtml = f'<blockquote><b>⋅ ─ {t_name} ─ ⋅</b></blockquote>\n<b>{str(count).zfill(3)}.</b> {v_name} .html'
                     else:
                         if caption == "/cc1":
-                            cc = f'**📹 VID_ID : {str(count).zfill(3)}.\n\n📝Title :{name1} [{res}p].mkv\n\n<pre><code>📚 Batch Name : {b_name}</code></pre>\n\n📥 Extracted By♠ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
-                            cc1 = f'**💾PDF_ID : {str(count).zfill(3)}.\n\n📝Title :{name1}.pdf\n\n<pre><code>📚 Batch Name : {b_name}</code></pre>\n\n📥 Extracted By♠ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
-                            cczip = f'[📁]Zip Id : {str(count).zfill(3)}\n**Zip Title :** `{name1}.zip`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**Extracted by➤**{CR}\n' 
-                            ccimg = f'[🖼️]Img Id : {str(count).zfill(3)}\n**Img Title :** `{name1}.jpg`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**Extracted by➤**{CR}\n'
-                            ccm = f'[🎵]Audio Id : {str(count).zfill(3)}\n**Audio Title :** `{name1}.mp3`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**Extracted by➤**{CR}\n'
-                            cchtml = f'[🌐]Html Id : {str(count).zfill(3)}\n**Html Title :** `{name1}.html`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**Extracted by➤**{CR}\n'
+                            cc = f'**📹 𝐕𝐈𝐃_𝐈𝐃 : {str(count).zfill(3)}.\n\n📝𝐓𝐢𝐭𝐥𝐞 :{name1} [{res}p].mkv\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+                            cc1 = f'**💾𝐏𝐃𝐅_𝐈𝐃 : {str(count).zfill(3)}.\n\n📝𝐓𝐢𝐭𝐥𝐞 :{name1}.pdf\n\n<pre><code>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</code></pre>\n\n📥 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}\n\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**'
+                            cczip = f'[📁]Zip Id : {str(count).zfill(3)}\n**Zip Title :** `{name1}.zip`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**{CR}\n' 
+                            ccimg = f'[🖼️]Img Id : {str(count).zfill(3)}\n**Img Title :** `{name1}.jpg`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**{CR}\n'
+                            ccm = f'[🎵]Audio Id : {str(count).zfill(3)}\n**Audio Title :** `{name1}.mp3`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**{CR}\n'
+                            cchtml = f'[🌐]Html Id : {str(count).zfill(3)}\n**Html Title :** `{name1}.html`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤**{CR}\n'
                         elif caption == "/cc2":
-                            cc = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🎞️ Title :</b> {name1}\n<b>├── Extention :  {CR} .mkv</b>\n<b>├── Resolution : [{res}]</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 Extracted By : {CR}**"
-                            cc1 = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>📁 Title :</b> {name1}\n<b>├── Extention :  {CR} .pdf</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 Extracted By : {CR}**"
-                            cczip = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>📒 Title :</b> {name1}\n<b>├── Extention :  {CR} .zip</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 Extracted By : {CR}**"
-                            ccimg = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🖼️ Title :</b> {name1}\n<b>├── Extention :  {CR} .jpg</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 Extracted By : {CR}**"
-                            ccm = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🎵 Title :</b> {name1}\n<b>├── Extention :  {CR} .mp3</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 Extracted By : {CR}**"
-                            cchtml = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🌐 Title :</b> {name1}\n<b>├── Extention :  {CR} .html</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 Extracted By : {CR}**"
+                            cc = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🎞️ 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .mkv</b>\n<b>├── Resolution : [{res}]</b>\n<blockquote><b>📚 Course : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}**"
+                            cc1 = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>📁 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .pdf</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}**"
+                            cczip = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>📒 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .zip</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}**"
+                            ccimg = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🖼️ 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .jpg</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}**"
+                            ccm = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🎵 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .mp3</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}**"
+                            cchtml = f"——— ✦ {str(count).zfill(3)} ✦ ———\n\n<b>🌐 𝐓𝐢𝐭𝐥𝐞 :</b> {name1}\n<b>├── 𝐄𝐱𝐭𝐞𝐧𝐭𝐢𝐨𝐧 :  {CR} .html</b>\n<blockquote><b>📚 𝐁𝐚𝐭𝐜𝐡 𝐍𝐚𝐦𝐞 : {b_name}</b></blockquote>\n\n**🌟 𝐄𝐱𝐭𝐫𝐚𝐜𝐭𝐞𝐝 𝐁𝐲⬩➤ : {CR}**"
                         else:
                             cc = f'<b>{str(count).zfill(3)}.</b> {name1} [{res}p] .mkv'
                             cc1 = f'<b>{str(count).zfill(3)}.</b> {name1} .pdf'
@@ -724,7 +724,7 @@ async def drm_handler(bot: Client, m: Message):
                     time.sleep(1)
                 
             except Exception as e:
-                await bot.send_message(channel_id, f'⚠️**Downloading Failed**⚠️\n**Name** =>> `{str(count).zfill(3)} {name1}`\n**Url** =>> {url}\n\n<blockquote expandable><i><b>Failed Reason: {str(e)}</b></i></blockquote>', disable_web_page_preview=True)
+                await bot.send_message(channel_id, f'⚠️**𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐢𝐧𝐠 𝐅𝐚𝐢𝐥𝐞𝐝**⚠️\n**𝐍𝐚𝐦𝐞** =>> `{str(count).zfill(3)} {name1}`\n**𝐔𝐑𝐋** =>> {url}\n\n<blockquote expandable><i><b>𝐅𝐚𝐢𝐥𝐞𝐝 𝐑𝐞𝐚𝐬𝐨𝐧: {str(e)}</b></i></blockquote>', disable_web_page_preview=True)
                 count += 1
                 failed_count += 1
                 continue
@@ -736,10 +736,10 @@ async def drm_handler(bot: Client, m: Message):
     success_count = len(links) - int(raw_text) - failed_count + 1
     video_count = len(links) - pdf_count - img_count
     if m.document:
-        await bot.send_message(channel_id, f"<blockquote>🔗 Total URLs: {len(links)} \n┠🔴 Total Failed URLs: {failed_count}\n┠🟢 Total Successful URLs: {success_count}\n┃   ┠🎥 Total Video URLs: {video_count}\n┃   ┠📄 Total PDF URLs: {pdf_count}\n┃   ┠📸 Total IMAGE URLs: {img_count}</blockquote>\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**\n")
-        await bot.send_message(channel_id, f"⋅ ─ list index ({raw_text}-{len(links)}) out of range ─ ⋅\n<blockquote><b>📚Batch : {b_name}</b></blockquote>\n⋅ ─ ✅DOWNLOADING ✩ COMPLETED ─ ⋅")
+        await bot.send_message(channel_id, f"<blockquote>🔗 𝐓𝐨𝐭𝐚𝐥 𝐔𝐑𝐋𝐬 URLs: {len(links)} \n┠🔴 𝐓𝐨𝐭𝐚𝐥 𝐅𝐚𝐢𝐥𝐞𝐝 𝐔𝐑𝐋𝐬: {failed_count}\n┠🟢 𝐓𝐨𝐭𝐚𝐥 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥 𝐔𝐑𝐋𝐬: {success_count}\n┃   ┠🎥 𝐓𝐨𝐭𝐚𝐥 𝐕𝐢𝐝𝐞𝐨 𝐔𝐑𝐋𝐬: {video_count}\n┃   ┠📄 𝐓𝐨𝐭𝐚𝐥 𝐏𝐃𝐅 𝐔𝐑𝐋𝐬: {pdf_count}\n┃   ┠📸 𝐓𝐨𝐭𝐚𝐥 𝐈𝐌𝐀𝐆𝐄 𝐔𝐑𝐋𝐬: {img_count}</blockquote>\n**➽━━━⊱∘₊𝙏𝙚𝙖𝙢★𝙏𝙤𝙭𝙞𝙘₊∘⊰━━━❥**\n")
+        await bot.send_message(channel_id, f"⋅ ─ 𝐥𝐢𝐬𝐭 𝐢𝐧𝐝𝐞𝐱 ({raw_text}-{len(links)}) 𝐨𝐮𝐭 𝐨𝐟 𝐫𝐚𝐧𝐠𝐞 ─ ⋅\n<blockquote><b>📚Batch : {b_name}</b></blockquote>\n⋅ ─ ✅DOWNLOADING ✩ COMPLETED ─ ⋅")
         if "/Baby" not in raw_text7:
-            await bot.send_message(m.chat.id, f"<blockquote><b>✅ Your Task is completed, please check your Set Channel📱</b></blockquote>")
+            await bot.send_message(m.chat.id, f"<blockquote><b>💕𝐘𝐨𝐮𝐫 𝐓𝐚𝐬𝐤 𝐢𝐬 𝐜𝐨𝐦𝐩𝐥𝐞𝐭𝐞𝐝,𝐩𝐥𝐞𝐚𝐬𝐞 𝐜𝐡𝐞𝐜𝐤 𝐲𝐨𝐮𝐫 𝐒𝐞𝐭 𝐂𝐡𝐚𝐧𝐧𝐞𝐥📱.</b></blockquote>")
 
 #============================================================================================================
 # ── Simple in-memory user store ──────────────────────────────────────────────
@@ -794,9 +794,9 @@ def register_owner_commands(bot):
         PWAPI1 = new_api
         PWAPI2 = new_api
         await msg.reply_text(
-            f"✅ **Api Successfully Changed!**\n\n"
-            f"🔗 **New Api:**\n`{PWAPI1}`\n\n"
-            f"⚡ Changed Live Now — No Bot restart needed Use Now🚀."
+            f" **💕𝐀𝐩𝐢 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲 𝐂𝐡𝐚𝐧𝐠𝐞𝐝!**\n\n"
+            f"🔗 **𝐍𝐞𝐰 𝐀𝐩𝐢:**\n`{PWAPI1}`\n\n"
+            f"⚡ 𝐂𝐡𝐚𝐧𝐠𝐞𝐝 𝐋𝐢𝐯𝐞 𝐍𝐨𝐰 — 𝐍𝐨 𝐁𝐨𝐭 𝐫𝐞𝐬𝐭𝐚𝐫𝐭 𝐧𝐞𝐞𝐝𝐞𝐝 𝐔𝐬𝐞 𝐍𝐨𝐰🚀."
         )
 
 #============================================================================================================
@@ -813,8 +813,8 @@ def register_drm_handlers(bot):
     async def download_command_handler(client: Client, m: Message):
         _download_eligible[m.chat.id] = True
         await m.reply_text(
-            "✅ **Now you are eligible to Download videos & pdf so Go ahead.**\n\n"
-            "📁 Send your `.txt` file or direct link to start downloading."
+            " **💕𝐒𝐮𝐩𝐩𝐞𝐫𝐛 𝐍𝐨𝐰 𝐲𝐨𝐮 𝐚𝐫𝐞 𝐄𝐥𝐢𝐠𝐢𝐛𝐥𝐞 𝐭𝐨 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐯𝐢𝐝𝐞𝐨𝐬 & 𝐩𝐝𝐟.**\n\n"
+            "📁**𝐒𝐞𝐧𝐝 𝐲𝐨𝐮𝐫 𝐭𝐱𝐭 𝐟𝐢𝐥𝐞 𝐨𝐫 𝐝𝐢𝐫𝐞𝐜𝐭 𝐥𝐢𝐧𝐤 𝐭𝐨 𝐬𝐭𝐚𝐫𝐭 𝐝𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐢𝐧𝐠.**"
         )
 
     # ── main drm handler ─────────────────────────────────────────────────────

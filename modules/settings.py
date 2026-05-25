@@ -217,14 +217,14 @@ def register_settings_handlers(bot):
     @bot.on_callback_query(filters.regex("pddf_thumbnail_command"))
     async def pdf_thumbnail_button(client, callback_query):
         keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton("💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton("💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
+            [InlineKeyboardButton("💥𝐂𝐢𝐧𝐝𝐞𝐫𝐞𝐥𝐥𝐚 𝐑𝐞𝐜𝐚𝐩𝐭𝐢𝐨𝐧", url="https://t.me/Cinderella_recaptionBot"), InlineKeyboardButton("💥𝐂𝐢𝐧𝐝𝐞𝐫𝐞𝐥𝐥𝐚 𝐒𝐭𝐫𝐢𝐧𝐠", url="https://t.me/Cinderella_StringBot")],
             [InlineKeyboardButton("🔙 Back to Settings", callback_data="thummbnail_command")]
         ])
         await callback_query.message.edit(
             "**📸 PDF Thumbnail**\n\n"
             "⚠️ **Temporary Unavailable**\n"
             "This feature is not available in this Bot.\n\n"
-            "Use Powerful Rename Bot **@Cinderella_renameBot**\n"
+            "Use Powerful Recaption Bot **@Cinderella_recaptionBot**\n"
             "If you want to Generate your String Session so use **@Cinderella_StringBot**",
             reply_markup=keyboard
         )
@@ -296,14 +296,14 @@ def register_settings_handlers(bot):
     @bot.on_callback_query(filters.regex("video_wateermark_command"))
     async def video_watermark(client, callback_query):
         keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton("💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton("💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
+            [InlineKeyboardButton("💥𝐂𝐢𝐧𝐝𝐞𝐫𝐞𝐥𝐥𝐚 𝐑𝐞𝐜𝐚𝐩𝐭𝐢𝐨𝐧", url="https://t.me/Cinderella_recaptionBot"), InlineKeyboardButton("💥𝐂𝐢𝐧𝐝𝐞𝐫𝐞𝐥𝐥𝐚 𝐒𝐭𝐫𝐢𝐧𝐠", url="https://t.me/Cinderella_StringBot")],
             [InlineKeyboardButton("🔙 Back to Settings", callback_data="wattermark_command")]
         ])
         await callback_query.message.edit(
             "**🎥 Video Watermark**\n\n"
             "⚠️ **Temporary Unavailable**\n"
             "This feature is not available in this Bot.\n\n"
-            "Use Powerful Rename Bot **@Cinderella_renameBot**\n"
+            "Use Powerful Recaption Bot **@Cinderella_recaptionBot**\n"
             "If you want to Generate your String Session so use **@Cinderella_StringBot**",
             reply_markup=keyboard
         )

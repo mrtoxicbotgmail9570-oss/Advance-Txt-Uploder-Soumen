@@ -36,15 +36,15 @@ import user_store
 
 # ── Random image list ────────────────────────────────────────────────────────
 image_list = [
-    "https://graph.org/file/417cc7326cab9036c0152-f6a281db2a6975dfa9.jpg",
-    "https://graph.org/file/033121ad32291bcaddd01-d91ae4a1f7ca9378fc.jpg",
-    "https://graph.org/file/45f48779e0aa39709d1e8-4c024567d60f6ec5c2.jpg",
-    "https://graph.org/file/6ccdd92af77784c9d367e-a4ba6f10456656bbbd.jpg",
-    "https://graph.org/file/b23084c3e9124e14e18ec-d385f8f9c8b1635a2e.jpg",
-    "https://graph.org/file/29c4511ee7a4653d22fe1-67906a2a8392895644.jpg",
-    "https://graph.org/file/b45300f1cd068ad8f1895-fa23a3a1ad25789597.jpg",
+    "https://graph.org/file/41f315a54e91963176271-084a885105ba946f5e.jpg",
+    "https://graph.org/file/e45d8d37be0c22a9cbbfa-3f2796849a1b13643a.jpg",
+    "https://graph.org/file/2d3ba7771a207e4ab33aa-272463dad4b5338502.jpg",
+    "https://graph.org/file/97d3d6a3c21bc9bdfa000-748da0a998885a9aaa.jpg",
+    "https://graph.org/file/b90ad7792c1d6b1b0d0ad-22be3904ec15293242.jpg",
+    "https://graph.org/file/b2d5f4c1abab45da76a80-699357bf49c4bbb721.jpg",
+    "https://graph.org/file/7fcefd140feafb524a0f6-0172a531df2ac35c9c.jpg",
 ]
-# ─────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────────────────
 
 # Initialize the bot
 bot = Client(
@@ -56,11 +56,11 @@ bot = Client(
 
 # .....,.....,.......,...,.......,....., .....,.....,.......,...,.......,.....,
 keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton("✨ All Commands", callback_data="cmd_command")],
-            [InlineKeyboardButton("💎 All Features", callback_data="feat_command"), InlineKeyboardButton("⚙️ Settings", callback_data="setttings")],
-            [InlineKeyboardButton("💳 Premium Plans", callback_data="upgrade_command")],
-            [InlineKeyboardButton(text="🔍Developer", url="https://t.me/CinderellaContactBot"), InlineKeyboardButton(text="👑 Owner", url="https://t.me/MR_Toxic_1")],
-            [InlineKeyboardButton(text="💥Cinderella Rename", url="https://t.me/Cinderella_renameBot"), InlineKeyboardButton(text="💥Cinderella String", url="https://t.me/Cinderella_StringBot")],
+            [InlineKeyboardButton("💕 𝐂𝐨𝐦𝐦𝐚𝐧𝐝𝐬", callback_data="cmd_command")],
+            [InlineKeyboardButton("🧌 𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬", callback_data="feat_command"), InlineKeyboardButton("⚙️ Settings", callback_data="setttings")],
+            [InlineKeyboardButton("💰 𝐏𝐫𝐞𝐦𝐢𝐮𝐦 𝐏𝐥𝐚𝐧𝐬", callback_data="upgrade_command")],
+            [InlineKeyboardButton(text="🥸 𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫", url="https://t.me/CinderellaContactBot"), InlineKeyboardButton(text="👑 𝐎𝐰𝐧𝐞𝐫", url="https://t.me/MR_Toxic_1")],
+            [InlineKeyboardButton(text="💥 𝐂𝐢𝐧𝐝𝐞𝐫𝐞𝐥𝐥𝐚 𝐑𝐞𝐜𝐚𝐩𝐭𝐢𝐨𝐧", url="https://t.me/Cinderella_recaptionBot"), InlineKeyboardButton(text="💥 𝐂𝐢𝐧𝐝𝐞𝐫𝐞𝐥𝐥𝐚 𝐒𝐭𝐫𝐢𝐧𝐠", url="https://t.me/Cinderella_StringBot")],
         ])      
 
 @bot.on_message(filters.command("start"))
@@ -73,20 +73,20 @@ async def start(bot, m: Message):
     mention = user.mention
     if m.chat.id in AUTH_USERS:
         caption = (
-            f"𝐇𝐞𝐥𝐥𝐨 𝐃𝐞𝐚𝐫👑!\n\n"
-            f"➠ 𝐈 𝐚𝐦 𝐚 𝐓𝐞𝐱𝐭 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐫 𝐁𝐨𝐭\n\n"
-            f"➠ Can Extract Videos & PDFs From Your Text File and Upload to Telegram!\n\n"
-            f"➠ For Guide Use button - **✨ Commands** 📖\n\n"
-            f"➠ 𝐌𝐚𝐝𝐞 𝐁𝐲 : [{CREDIT}](tg://openmessage?user_id={OWNER}) 🦁"
+            f"💕 𝐇𝐞𝐥𝐥𝐨 𝐁𝐚𝐛𝐲!\n\n"
+            f"⬩➤𝐈𝐦 𝐚 𝐀𝐝𝐚𝐯𝐚𝐧𝐜𝐞𝐝 𝐔𝐩𝐥𝐨𝐚𝐝𝐞𝐫 𝐁𝐨𝐭\n\n"
+            f"⬩➤𝐈 𝐂𝐚𝐧 𝐄𝐱𝐭𝐫𝐚𝐜𝐭 𝐕𝐢𝐝𝐞𝐨𝐬 & 𝐏𝐃𝐅𝐬 𝐅𝐫𝐨𝐦 𝐘𝐨𝐮𝐫 𝐓𝐞𝐱𝐭 𝐅𝐢𝐥𝐞 𝐚𝐧𝐝 𝐒𝐞𝐧𝐭 𝐭𝐨 𝐲𝐨𝐮!\n\n"
+            f"⬩➤𝐅𝐨𝐫 𝐆𝐮𝐢𝐝𝐞 𝐔𝐬𝐞 𝐛𝐮𝐭𝐭𝐨𝐧 - **✨ Commands** 📖\n\n"
+            f"⬩➤𝐌𝐚𝐝𝐞 𝐁𝐲 : [{CREDIT}](tg://openmessage?user_id={OWNER}) 🗿."
         )
     else:
         caption = (
-            f"𝐇𝐞𝐥𝐥𝐨🫣 **{m.from_user.first_name}** 👋!\n\n"
-            f"➠ 𝐈 𝐚𝐦 𝐚 𝐓𝐞𝐱𝐭 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐫 𝐁𝐨𝐭\n\n"
-            f"➠ Can Extract Videos & PDFs From Your Text File and Upload to Telegram!\n\n"
-            f"**You are currently using the free version.** 🆓\n"
-            f"**Want to get Premium so let's started? Press /id**\n\n"
-            f"💬 Contact: [{CREDIT}](tg://openmessage?user_id={OWNER}) to Get the Premium Subscription ! 🔓\n"
+            f"💘 𝐇𝐞𝐥𝐥𝐨 𝐖𝐞𝐥𝐜𝐨𝐦𝐞 **{m.from_user.first_name}** !\n\n"
+            f"⬩➤𝐈𝐦 𝐚 𝐀𝐝𝐚𝐯𝐚𝐧𝐜𝐞𝐝 𝐔𝐩𝐥𝐨𝐚𝐝𝐞𝐫 𝐁𝐨𝐭\n\n"
+            f"⬩➤ 𝐈 𝐂𝐚𝐧 𝐄𝐱𝐭𝐫𝐚𝐜𝐭 𝐕𝐢𝐝𝐞𝐨𝐬 & 𝐏𝐃𝐅𝐬 𝐅𝐫𝐨𝐦 𝐘𝐨𝐮𝐫 𝐓𝐞𝐱𝐭 𝐅𝐢𝐥𝐞 𝐚𝐧𝐝 𝐒𝐞𝐧𝐭 𝐭𝐨 𝐲𝐨𝐮!\n\n"
+            f"⬩➤🆓𝐘𝐨𝐮 𝐚𝐫𝐞 𝐜𝐮𝐫𝐫𝐞𝐧𝐭𝐥𝐲 𝐮𝐬𝐢𝐧𝐠 𝐭𝐡𝐞 𝕗𝕣𝕖𝕖 𝐯𝐞𝐫𝐬𝐢𝐨𝐧!\n"
+            f"⬩➤𝐖𝐚𝐧𝐭 𝐭𝐨 𝐠𝐞𝐭 𝐏𝐫𝐞𝐦𝐢𝐮𝐦 𝐬𝐨 𝐥𝐞𝐭'𝐬 𝐬𝐭𝐚𝐫𝐭𝐞𝐝? 𝐏𝐫𝐞𝐬𝐬 /id**\n\n"
+            f"⬩➤📞 𝐂𝐨𝐧𝐭𝐚𝐜𝐭: [{CREDIT}](tg://openmessage?user_id={OWNER}) 𝐭𝐨 𝐆𝐞𝐭 𝐭𝐡𝐞 𝐏𝐫𝐞𝐦𝐢𝐮𝐦 𝐒𝐮𝐛𝐬𝐜𝐫𝐢𝐩𝐭𝐢𝐨𝐧💎!\n"
         )
     await bot.send_photo(
         chat_id=m.chat.id,
@@ -101,9 +101,9 @@ async def back_to_main_menu(client, callback_query):
     user_id = callback_query.from_user.id
     first_name = callback_query.from_user.first_name
     caption = (
-        f"𝐇𝐞𝐥𝐥𝐨 **{first_name}** 👋!\n\n"
-        f"➠ 𝐈 𝐚𝐦 𝐚 𝐓𝐞𝐱𝐭 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐫 𝐁𝐨𝐭\n\n"
-        f"➠ 𝐁𝐲 : [{CREDIT}](tg://openmessage?user_id={OWNER})"
+        f"💕𝐇𝐞𝐥𝐥𝐨 **{first_name}** !\n\n"
+        f"⬩➤𝐈𝐦 𝐚 𝐀𝐝𝐚𝐯𝐚𝐧𝐜𝐞𝐝 𝐔𝐩𝐥𝐨𝐚𝐝𝐞𝐫 𝐁𝐨𝐭!\n\n"
+        f"⬩➤ 𝐁𝐲 : [{CREDIT}](tg://openmessage?user_id={OWNER})"
     )
     
     await callback_query.message.edit_media(
@@ -120,9 +120,9 @@ async def back_to_main_menu(client, callback_query):
 
 @bot.on_message(filters.command(["id"]))
 async def id_command(client, message: Message):
-    keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(text="Send to Owner💫", url=f"tg://openmessage?user_id={OWNER}")]])
+    keyboard = InlineKeyboardMarkup([[InlineKeyboardButton(text="🦍𝐒𝐞𝐧𝐝 𝐭𝐨 𝐎𝐰𝐧𝐞𝐫", url=f"tg://openmessage?user_id={OWNER}")]])
     chat_id = message.chat.id
-    text = f"<blockquote expandable><b>The ID of this chat id is:</b></blockquote>\n`{chat_id}`"
+    text = f"<blockquote expandable><b>𝐓𝐡𝐞 𝐈𝐃 𝐨𝐟 𝐭𝐡𝐢𝐬 𝐜𝐡𝐚𝐭 𝐢𝐝 𝐢𝐬:</b></blockquote>\n`{chat_id}`"
     
     if str(chat_id).startswith("-100"):
         await message.reply_text(text)
